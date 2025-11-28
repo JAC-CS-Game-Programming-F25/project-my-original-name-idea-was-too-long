@@ -10,108 +10,132 @@
 
 ---
 
-# Sample Proposal - Pokémon the Trading Card Game
-
-> [!note]
-> This was taken from a project I did in university so the scope is **much** larger than what I'm expecting from you in terms of number of features!
+# 🎲 Dados de Toledo
 
 ## ✒️ Description
 
-In this turn-based battle card game, players assume the role of a Pokémon trainer and use their Pokémon to battle their opponent's Pokémon. Players play Pokémon to the field and attack their opponent's Pokémon. A Pokémon that has sustained enough damage is Knocked Out, and the player who knocked it out draws a Prize card. There are usually six Prize cards, and the primary win condition is to draw all of them. Other ways to win are by knocking out all the Pokémon the opponent has on the field so that the opponent has none left, or if at the beginning of their opponent's turn there are no cards left to draw in the opponent's deck.
+This game is inspired be real dice games described in the 13th century Spanish work by king Alfonso X of Castile, *Libro de los juegos* (Book of Games) or *Libro de axedrez, dados e tablas* (Book of Chess, Dice, and Tables).  
+In this game, the player will be able to select from a number of opponents, each of whom has their own preferred dice game. Each of these games allows the player to wager a certain amount of their money, with the ultimate objective being to win all of the money from each opponent. Once each opponent runs out of money, they will no longer be able to play, and the player will have to move on to another opponent.  
+There will be three games that opponents could favour: Riffa, Panquist, and Triga. Each of these games have their own set of rules for determining the winner and loser of the match.
 
 ## 🕹️ Gameplay
 
-Players begin by having one player select heads or tails, and the other flips a coin; the winner of the coin flip will decide who goes first or second. The player going first cannot attack their first turn, unless the card says otherwise. (Dice may be used in place of coins, with even numbers representing heads and odd numbers representing tails). Players then shuffle their decks and draw seven cards, then play one Basic Pokémon onto the field. This Pokémon is known as the Active Pokémon and is usually the one that attacks and receives damage. If a player does not have any Basic Pokémon, they must shuffle and draw a new hand, and the opponent may draw one additional card. Once both players have at least one Basic Pokémon, they can play up to five more Basic Pokémon onto their "Bench" (representing the maximum-carry limit of six from the video games). Players then take the top six cards of their deck and place them to the side as Prize Cards. Play then begins with the player who won the coin flip.
+The Player starts by selecting their opponent, which will determine what game is being played. Each game starts with a wager phase where the player chooses how much money they are going to gamble on that round, with the amount not being able to exceed either their own or their opponent's total money. Once the wager has been placed, a "battle" roll is made by each player to determine who goes first.
 
-Play alternates between players who may take several actions during their turn, including playing new Basic Pokémon, evolving their Pokémon, playing Trainer cards and Energy cards, and using Pokémon Abilities. A player may also retreat their Active Pokémon, switching the Active Pokémon with one on the Bench. At the end of their turn, a player may use one of their Active Pokémon's attacks, provided the prerequisite amount and types of Energy are attached to that Pokémon. Effects from that attack are then activated and damage may be placed on the Defending Pokémon; some attacks simply have effects but do not do damage. Damage may be modified depending on whether the defender has a weakness or a resistance to the attacker's Pokémon type. If the final damage exceeds the defending Pokémon's HP, it is Knocked Out, and the active player takes a prize card and ends their turn.
+From here the rules go according to the game being played.  
+**Riffa:** This is the simplest game. Each player has 3 dice and they roll them until they get a pair on 2 of the dice. They then roll the third die one last time and add up the dice total. Whoever has the higher total wins the round's wager.  
 
-This implementation of _Pokémon the Trading Card Game_ is a single player experience with an AI. The game is played primarily with the mouse to interact with the cards and general GUI. The players can optionally hit `M` on their keyboard to mute all game sounds.
+**Triga:** Each player has 3 dice. On the first round, the player/opponent rolls their dice and adds up the values. If the total is below 7 or above 14, this is the Triga, and they win immediately. If the total is any value from 7 to 14, this value becomes their mark. The next player then rolls and does the same, winning on a Triga or getting a mark. If, however, a player rolls the other player's mark, the other player whose mark it is wins. Once each player has a mark, both players take turns rolling (with no more chances of winning on a Triga). From here, if a player rolls their own mark they win, but if they roll the opponent's mark, they lose.  
+
+**Panquist:** Each player has 3 dice. Each player rolls until they get a value between 7 and 14 (inclusive) which becomes their mark. The players then keep rolling until they hit their own mark, in which case they win, or their opponent's mark, in which case they lose. How much is won is based on the precise values of each die when the mark is reached, with the winner getting either a quarter, half, two thirds, or all of the wager (the last being called a Panquist). The possible wins are as follows:  
+| Mark Total | 1/4            | 1/2            | 3/4            | Panquist |
+|------------|----------------|----------------|----------------|----------|
+| 7          | n/a            | 5+1+1 or 4+2+1 | 2+2+3          | 3+3+1    |
+| 8          | 5+2+1          | 4+3+1          | 6+1+1 or 2+2+4 | 3+3+2    |
+| 9          | 6+2+1 or 5+3+1 | 4+3+2          | 2+2+5 or 3+3+3 | 4+4+1    |
+| 10         | 5+4+1 or 5+3+2 | 6+3+1          | 2+2+6 or 4+3+3 | 4+4+2    |
+| 11         | 6+3+2 or 5+4+2 | 6+4+1          | 5+5+1 or 4+4+3 | 3+3+5    |
+| 12         | 6+5+1 or 6+4+2 | 5+4+3          | 5+5+2 or 4+4+4 | 3+3+6    |
+| 13         | 6+5+2          | 6+4+3          | 6+6+1 or 5+5+3 | 4+4+5    |
+| 14         | n/a            | 6+5+3          | 6+6+2 or 5+5+4 | 4+4+6    |
+
+This is a single player game versus an AI opponent. The player can press 'H' at any time during the game to review the rules in case they are confused. Once the player has made a wager, they have to see the round through, but during the wager phase, they can decide to leave and challenge a different opponent to a different game if they so desire.
 
 ## 📃 Requirements
 
-> [!note]
-> This was a web project so that's why you'll see requirements about logging in and uploading data which for you is irrelevant. Focus more on the requirements describing actions taken for gameplay.
+1. The user shall be able to switch between opponents using 'A' and 'D' on the opponent selection screen.
+2. The user shall be able to select their desired opponent by pressing 'Enter'
+3. The user shall be able to view the rules for the opponent's preferred game by pressing 'H' on the opponent selection screen or anytime in the PlayState.
+4. The user shall choose how much money to wager when the game begins.
+5. The user and opponent shall each roll a "battle" roll to determine who goes first.
+6. The user and opponent shall roll their dice according to the rules of the game they are playing:
 
-1. The user shall register to be able to login.
-2. The user shall login to be able to play a game.
-3. The user shall upload a valid deck file.
-4. The user shall upload a valid cards file.
-5. The user shall upload a valid abilities file.
-6. The user shall select which deck they will use in the game.
-7. The user shall select which deck the AI will use in the game.
-8. The system shall "flip a coin" to decide which player goes first.
-9. The system shall shuffle the user's deck.
-10. The system shall draw the top 7 cards from the user's deck.
-11. If the user does not have a Basic Pokémon in their hand the system shall "mulligan" until they do.
-12. Upon each mulligan, the AI shall draw a card.
-13. The user shall put one of their Basic Pokémon face down as their Active Pokémon.
-14. The user shall put up to 5 more Basic Pokémon face down on their Bench.
-15. Upon a new turn, the system shall draw a card from the deck of the current player.
-16. Upon a new turn, the system shall place the drawn card in the hand of the current player.
-17. The user shall put (up to 5 total) Basic Pokémon cards from their hand onto their Bench.
-18. The user shall Evolve their Pokémon as many times as they choose.
-19. The user shall attach an Energy card from their hand to one of their Pokémon once per turn.
-20. The user shall play Trainer cards (as many as they want, but only one Supporter card and one Stadium card per turn).
-21. The user shall Retreat their Active Pokémon once per turn.
-22. The user shall use as many Abilities as they choose.
-23. The user shall attack the opponent's Active Pokémon.
-24. After a player attacks, the system shall end their turn and start their opponent's turn.
-25. The system shall execute any "special conditions" after a turn is over.
-26. The user shall pick a Victory Card when the opposing Active Pokémon dies.
+7. **Riffa**  
+7-a. In **Riffa**, the user or ai opponent will roll their dice until they have a pair.  
+7-b. The roller will then roll their last die once more and add up all the value.  
+7-c. The second player will then do the same.  
+7-d. The system will compare the totals and award the wager amount to whoever has the higher roll. In the case of a tie, no-one wins.
+
+8. **Triga**  
+8-a. In **Triga**, the user or ai opponent will roll their dice.  
+8-b. The system will determine if the role is a Triga (below 7 or above 14), in which case the roller wins, or if the value will become the player's mark.  
+8-c. The next player then rolls their dice.  
+8-d. The system will determine if the role is a Triga, in which case the roller wins, the other player's mark, in which case the other player wins, or if the value will become the second player's mark.  
+8-e. The players shall take turns rolling their dice.  
+8-f. on each roll, the system shall determine whether the roll matches the roller's mark, in which case they win, or the other player's mark, in which case the other player wins, or whether the game shall keep going, in which case the the other player becomes the roller.  
+8-g. When a winner is determined, the system will award the wager amount to the victor.
+
+9. **Panquist**  
+9-a. In **Panquist**, the user or ai opponent will roll their dice.  
+9-b. The system determines whether the rolled value is between 7 and 14 (inclusive). If this is the case the system makes this the player's mark, otherwise the player rerolls until they get such a value.  
+9-c. The second to roll then rolls until they get a value between 7 and 14 (inclusive), following the same logic as before.  
+9-d. The system determines if their roll matches the other player's mark. If that is the case, the other player wins, otherwise the value becomes the second player's mark.  
+9-e. Each player shall then take turns rolling their dice.  
+9-f. On each role, the system shall determine if the roll matches the roller's mark, in which case they win, or the other player's mark, in which case the other player wins, or whether the game shall keep going, in which case the the other player becomes the roller. 
+8-g. When a winner is determined, the system will determine what fraction of the wager to award to the winner based on the combination of dice which totalled to equal the mark. The system then awards that value to the victor.
+
+10. The system shall determine whether the user or opponent has enough money to keep playing.
+11. If they both still have money, the user shall return to the wager state from which they can enter a new wager or return to opponent selection.
+12. If the ai opponent has no more money, the user shall return to the opponent selection.
+13. If all opponents are eliminated, the player proceeds to the Victory screen.
+14. If the player has no more money, they proceed to the Game Over screen.
 
 ### 🤖 State Diagram
+Game States:  
+![State Diagram](./assets/images/proposal/StateDiagram.png)
 
-> [!note]
-> Remember that you'll need diagrams for not only game states but entity states as well.
-
-![State Diagram](./assets/images/StateDiagram.png)
+Entity States (Dice):  
+![Dice State Diagram](./assets/images/proposal/DiceEntityStateDiagram.png)
 
 ### 🗺️ Class Diagram
 
-![Class Diagram](./assets/images/ClassDiagram.png)
+![Class Diagram](./assets/images/proposal/ClassDiagram.png)
 
 ### 🧵 Wireframes
 
-> [!note]
-> Your wireframes don't have to be super polished. They can even be black/white and hand drawn. I'm just looking for a rough idea about what you're visualizing.
+![Main Menu](./assets/images/proposal/Wireframe_mainMenu.png)
+-   **Main Menu** *Continue* will load existing saved states, *New Game* will start everything from scratch. Both options lead to the opponent selection.
 
-![Main Menu](./assets/images/Main-Menu.png)
+![Opponent Selection](./assets/images/proposal/Wireframe_opponentSelection.png)
+-   **Opponent Selection** Pressing W or D will cycle through possible opponents, tweening their portraits and changing the values of their money and the game they play. The background here will give a vibe of being in a medieval tavern.
+-   Pressing H here and in game will tween in a text box from the side of the screen which will explain the rules of the game.
 
--   _Let's Play_ will navigate to the main game.
--   _Upload Cards_ will navigation to the forms for uploading and parsing the data files for the game.
--   _Change Log_ will navigate the user to a page with a list of features/changes that have been implemented throughout the development of the game.
+![Game Board](./assets/images/proposal/Wireframe_opponentTurnDiceRoll.png)
 
-![Game Board](./assets/images/Game-Board.png)
-
-We want to keep the GUI as simple and clear as possible by having cards with relevant images to act as a way for the user to intuitively navigate the game. We want to implement a layout that would look like as if one were playing a match of the Pokémon Trading Card Game with physical cards in real life. Clicking on any of the cards will reveal that card's details to the player.
+![Game Board, Player's Turn](./assets/images/proposal/Wireframe_playerTurn.png)
+When a game begins, the table will tween onto the screen, giving a top-down view of the board. A hand sprite will point to the player or opponent's portrait to indicate whose turn it is to roll. Dice rolling will have a rolling animation and will bounce around, hitting the walls of the board and each other, until they get bellow a certain velocity, at which point they'll stop and show their face. When all the rolling dice finally stop, dice icons will appear at the top of the board indicating the total value. On victory or defeat, a plaque will tween onto the screen indicating the result. A sound will play indicating the exchange of money and the player and opponent's money values will update accordingly.
 
 ### 🎨 Assets
 
-We used [app.diagrams.net](https://app.diagrams.net/) to create the wireframes. Wireframes are the equivalent to the skeleton of a web app since they are used to describe the functionality of the product and the users experience.
-
-We plan on following trends already found in other trading card video games, such as Pokémon Trading Card Game Online, Hearthstone, Magic the Gathering Arena, and Gwent.
-
-The GUI will be kept simple and playful, as to make sure the game is easy to understand what each component does and is, as well as light hearted to keep to the Pokémon theme.
+The Class diagram was created using [app.diagrams.net](https://app.diagrams.net/), while the State diagrams were created using [Mermaid](https://mermaid.live/). Wireframes were hand-drawn by me.
 
 #### 🖼️ Images
 
--   Most images will be used from the well known community driven wikipedia site, [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Main_Page).
--   Especially their [Trading Card Game section](<https://bulbapedia.bulbagarden.net/wiki/Full_Art_card_(TCG)>).
+The majority of sprites and images for the game will be assets shared freely on [itch.io](https://itch.io/game-assets) or [opengameart.org](https://opengameart.org/). Namely, the dice sprite which I will use is [this one](https://opengameart.org/content/pixel-art-dice-faces) by Vircon32 (Carra). And the UI elements will be taken from amongst [these assets](https://opengameart.org/content/user-interface-element-pack-panels-buttons-sliders-tables-icons) by p0ss.  
+
+Most other images will be original art created by me. Sprites which I create will make use of the open source tool [libresprite](https://libresprite.github.io/).  
+
+Opponent portraits will come from medieval manuscripts, such as the manuscripts of the *Cantigas de Santa Maria*, all of which are in the public domain.
 
 #### ✏️ Fonts
 
-For fonts, a simple sans-serif like Roboto will look quite nice. It's a font that is legible, light on storage size, and fun to keep with the theme we're going for. We also used a more cartoonish Pokemon font for the title screen.
+For fonts, text that is small and whose readability is more important, such as selection options, game instructions, etc., will be in a simple sans-serif like Roboto. For titles and more "juicy" text, I will use the font Manufacturing Consent by Frederick Brennan. This font gives a retro medieval gothic style which helps establish the game's setting.
 
--   [Pokemon](https://www.dafont.com/pokemon.font)
+-   [Manufacturing Consent](https://fonts.google.com/specimen/Manufacturing+Consent)
 -   [Roboto](https://fonts.google.com/specimen/Roboto)
 
 #### 🔊 Sounds
 
-All sounds were taken from [freesound.org](https://freesound.org) for the actions pertaining to cards.
+Sounds will be taken from a variety of free sound sharing sites, including [opengameart.org](https://opengameart.org/) and [freesound.org](https://freesound.org)
 
--   [Shuffle cards](https://freesound.org/people/VKProduktion/sounds/217502/)
--   [Flip card](https://freesound.org/people/Splashdust/sounds/84322/)
+-   [Coin transaction](https://opengameart.org/content/sack-of-gold)
+-   [Transition sound effect](https://opengameart.org/content/stone-door)
+-   [Tavern Ambiance](https://freesound.org/people/o_ciz/sounds/475505/)
+-   [Music 1](https://freesound.org/people/soundsandrebounds/sounds/769808/)
+-   [Music 2](https://freesound.org/people/giangallegos/sounds/812170/)
+
+Other sounds shall be recorded by myself.
 
 ### 📚 References
 
--   [Pokemon Rulebook](http://assets.pokemon.com/assets/cms2/pdf/trading-card-game/rulebook/xy8-rulebook-en.pdf)
+An English translation of Alfonso X's *Book of Games*, translated by Sonja Musser Golladay, can be found [here](https://web.archive.org/web/20060908093555/http://www.u.arizona.edu/~smusser/ljtranslation.html).
