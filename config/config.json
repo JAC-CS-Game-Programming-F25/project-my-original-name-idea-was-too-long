@@ -1,0 +1,16 @@
+{
+	"images": [
+		{
+			"name": "opponentPortraits",
+			"path": "./assets/images/opponent-portraits.png",
+			"width": 307,
+			"height": 1077
+		}
+	],
+	"fonts": [
+
+	],
+	"sounds": [
+		
+	]
+}

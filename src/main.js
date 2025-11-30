@@ -35,7 +35,7 @@ const {
 	images: imageDefinitions,
 	fonts: fontDefinitions,
 	sounds: soundDefinitions,
-} = await fetch('./src/config.json').then((response) => response.json());
+} = await fetch('./config/config.json').then((response) => response.json());
 
 // Load all the assets from their definitions.
 images.load(imageDefinitions);
