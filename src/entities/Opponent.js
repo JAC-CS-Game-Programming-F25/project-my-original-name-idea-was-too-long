@@ -13,19 +13,19 @@ export default class Opponent extends Character {
      * and a particular game which they want to play. An opponent will keep playing until they have
      * no more money.
      * @param {object} opponentDefinition a JSON object containing fields for initializing the opponent.
+     * @param {string} game the name of the game the opponent wishes to play.
+     * @param {number} startingMoney the amount of money the opponent will start with.
      */
-    constructor(opponentDefinition) {
-        const startingMoney = opponentDefinition.startingMoney ?? Character.PLAYER_STARTING_MONEY;
+    constructor(opponentDefinition, game, startingMoney) {
         super(startingMoney);
 
-        // The name of the game the opponent wishes to play.
-        this.game = opponentDefinition.game;
+        this.game = game;
         // The lines the opponent may occasionally speak to the player.
         this.greetings = opponentDefinition.greetings;
 
         this.name = opponentDefinition.name;
         this.portrait = new Sprite(
-            images.get(ImageName.OpponentPortraits), // Note, this doesn't exist yet!!!!
+            images.get(ImageName.OpponentPortraits),
             opponentDefinition.portraitDefinition.x,
             opponentDefinition.portraitDefinition.y,
             Opponent.OPPONENT_PORTRAITS_WIDTH,

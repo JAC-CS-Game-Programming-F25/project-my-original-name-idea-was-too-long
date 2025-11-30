@@ -97,7 +97,7 @@ Entity States (Dice):
 -   **Main Menu** *Continue* will load existing saved states, *New Game* will start everything from scratch. Both options lead to the opponent selection.
 
 ![Opponent Selection](./assets/images/proposal/Wireframe_opponentSelection.png)
--   **Opponent Selection** Pressing W or D will cycle through possible opponents, tweening their portraits and changing the values of their money and the game they play. The background here will give a vibe of being in a medieval tavern.
+-   **Opponent Selection** Pressing A or D will cycle through possible opponents, tweening their portraits and changing the values of their money and the game they play. The background here will give a vibe of being in a medieval tavern.
 -   Pressing H here and in game will tween in a text box from the side of the screen which will explain the rules of the game.
 
 ![Game Board](./assets/images/proposal/Wireframe_opponentTurnDiceRoll.png)
