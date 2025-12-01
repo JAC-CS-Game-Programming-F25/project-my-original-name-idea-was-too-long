@@ -1,9 +1,13 @@
+import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
 import State from "../../lib/State.js";
 import Timer from "../../lib/Timer.js";
+import Vector from "../../lib/Vector.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
+import Direction from "../enums/Direction.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, opponentFactory } from "../globals.js";
+import UIArrow from "../user-interface/UIArrow.js";
 
 export default class OpponentSelectionState extends State {
     /**
@@ -23,9 +27,23 @@ export default class OpponentSelectionState extends State {
         this.isTransitioning = false;
         // The rendering offset for when transitioning between opponents.
         this.transitionOffset = 0;
+        this.transitionDuration = 0.5;
         // The possible starting positions for the offset so that the opponent starts offscreen and swooshes in.
-        this.leftTransitionOffsetStart = CANVAS_WIDTH + Opponent.OPPONENT_PORTRAITS_WIDTH;
-        this.rightTransitionOffsetStart = -(Opponent.OPPONENT_PORTRAITS_WIDTH * 2);
+        this.rightTransitionOffsetStart = CANVAS_WIDTH / 2 + Opponent.OPPONENT_PORTRAITS_WIDTH;
+        this.leftTransitionOffsetStart = -(CANVAS_WIDTH / 2) - Opponent.OPPONENT_PORTRAITS_WIDTH;
+
+        // Define the arrow ui elements.
+        const arrowPadding = 100;
+        this.leftArrow = new UIArrow(
+            arrowPadding,
+            CANVAS_HEIGHT / 2 - UIArrow.SPRITE_MEASUREMENTS_LEFT.height / 2,
+            Direction.Left
+        );
+        this.rightArrow = new UIArrow(
+            CANVAS_WIDTH - arrowPadding - UIArrow.SPRITE_MEASUREMENTS_RIGHT.width,
+            CANVAS_HEIGHT / 2 - UIArrow.SPRITE_MEASUREMENTS_RIGHT.height / 2,
+            Direction.Right
+        );
 
         this.timer = new Timer();
     }
@@ -59,15 +77,24 @@ export default class OpponentSelectionState extends State {
             return;
         }
 
-        // ###################### DO THE TWEEN BASED ON THE DIRECTION ##########################
-        // Don't forget to set this.isTransitioning to true and then back to false in the callback.
+        // Set the transition and tween the offset so the opponents cycle like a carrousel.
+        this.isTransitioning = true;
+        this.transitionOffset = direction > 0 ? this.rightTransitionOffsetStart : this.leftTransitionOffsetStart;
+        this.timer.tween(
+            this,
+            { transitionOffset: 0 },
+            this.transitionDuration,
+            Easing.easeOutQuad,
+            () => {
+                this.isTransitioning = false;
+            }
+        )
     }
 
 
     //#region Render methods
 
     render() {
-        // A WHOLE LOT OF SH-- TO DO HERE
         context.save();
         this.renderOpponent();
         this.renderUI();
@@ -93,7 +120,7 @@ export default class OpponentSelectionState extends State {
         if (this.isTransitioning) {
             // We can determine the relative positioning of the previous opponent by whether the offset is positive (previous opponent is thus on the
             // left) or negative (previous opponent is on the right).
-            const previousOpponent = this.transitionOffset > 0 ? this.opponents[this.selectedOpponent - 1] : this.opponents[this.selectedOpponent - 1];
+            const previousOpponent = this.transitionOffset > 0 ? this.opponents[this.selectedOpponent - 1] : this.opponents[this.selectedOpponent + 1];
             // Get the additional offset for the previous opponent to be rendered relative to the current opponent.
             const distanceFromCurrentOpponent = this.transitionOffset > 0 ? this.rightTransitionOffsetStart : this.leftTransitionOffsetStart;
 
@@ -126,6 +153,23 @@ export default class OpponentSelectionState extends State {
         context.fillText(`Your Money:`, 30, 60);
         context.textAlign = 'right';
         context.fillText(`${this.player.money}`, 195, 100);
+
+        context.font = '60px manufacturingConsent';
+        const letterOffset = { x: 30, y: 65 };
+        this.leftArrow.render();
+        context.textAlign = 'left';
+        context.fillText(
+            "A",
+            this.leftArrow.position.x + letterOffset.x,
+            this.leftArrow.position.y + letterOffset.y
+        );
+        this.rightArrow.render();
+        context.textAlign = 'right';
+        context.fillText(
+            "D",
+            this.rightArrow.position.x + this.rightArrow.dimensions.x - letterOffset.x,
+            this.rightArrow.position.y + letterOffset.y
+        );
 
         if (!this.isTransitioning) {
             context.font = '60px roboto';

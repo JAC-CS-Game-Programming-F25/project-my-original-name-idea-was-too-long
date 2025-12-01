@@ -5,6 +5,12 @@
 			"path": "./assets/images/opponent-portraits.png",
 			"width": 307,
 			"height": 1077
+		},
+		{
+			"name": "controlsStone",
+			"path": "./assets/images/controls-stone.png",
+			"width": 960,
+			"height": 540
 		}
 	],
 	"fonts": [
