@@ -4,14 +4,15 @@ import Sounds from '../lib/Sounds.js';
 import Timer from '../lib/Timer.js';
 import Input from '../lib/Input.js';
 import StateStack from '../lib/StateStack.js';
+import OpponentFactory from './services/OpponentFactory.js';
 
 export const canvas = document.createElement('canvas');
 export const context =
 	canvas.getContext('2d') || new CanvasRenderingContext2D();
 
 // Replace these values according to how big you want your canvas.
-export const CANVAS_WIDTH = 480;
-export const CANVAS_HEIGHT = 352;
+export const CANVAS_WIDTH = 1920;
+export const CANVAS_HEIGHT = 1080;
 
 const resizeCanvas = () => {
 	const scaleX = window.innerWidth / CANVAS_WIDTH;
@@ -34,3 +35,5 @@ export const stateStack = new StateStack();
 export const timer = new Timer();
 export const input = new Input(canvas);
 export const sounds = new Sounds();
+
+export const opponentFactory = new OpponentFactory();

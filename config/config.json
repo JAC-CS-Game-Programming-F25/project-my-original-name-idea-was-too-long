@@ -1,0 +1,29 @@
+{
+	"images": [
+		{
+			"name": "opponentPortraits",
+			"path": "./assets/images/opponent-portraits.png",
+			"width": 307,
+			"height": 1077
+		},
+		{
+			"name": "controlsStone",
+			"path": "./assets/images/controls-stone.png",
+			"width": 960,
+			"height": 540
+		}
+	],
+	"fonts": [
+		{
+			"name": "manufacturingConsent",
+			"path": "./assets/fonts/ManufacturingConsent-Regular.ttf"
+		},
+		{
+			"name": "roboto",
+			"path": "./assets/fonts/Roboto-Black.ttf"
+		}
+	],
+	"sounds": [
+		
+	]
+}

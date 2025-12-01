@@ -19,6 +19,7 @@ import {
 	timer,
 	sounds,
 	stateStack,
+	opponentFactory,
 } from './globals.js';
 import TitleScreenState from './states/TitleScreenState.js';
 
@@ -35,12 +36,14 @@ const {
 	images: imageDefinitions,
 	fonts: fontDefinitions,
 	sounds: soundDefinitions,
-} = await fetch('./src/config.json').then((response) => response.json());
+} = await fetch('./config/config.json').then((response) => response.json());
+const opponentDefinitions = await fetch('./config/opponents.json').then((response) => response.json());
 
 // Load all the assets from their definitions.
 images.load(imageDefinitions);
 fonts.load(fontDefinitions);
 sounds.load(soundDefinitions);
+opponentFactory.load(opponentDefinitions);
 
 // Set up the state stack.
 stateStack.push(new TitleScreenState());
