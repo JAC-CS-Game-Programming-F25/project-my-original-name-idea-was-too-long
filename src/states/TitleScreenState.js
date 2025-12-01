@@ -5,7 +5,9 @@ import OpponentSelectionState from "./OpponentSelectionState.js";
 export default class TitleScreenState extends State {
 	constructor() {
 		super();
+	}
 
+	enter() {
 		stateStack.push(new OpponentSelectionState()) // for now go straight to the Opponent selection.
 	}
 

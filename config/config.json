@@ -8,7 +8,14 @@
 		}
 	],
 	"fonts": [
-
+		{
+			"name": "manufacturingConsent",
+			"path": "./assets/fonts/ManufacturingConsent-Regular.ttf"
+		},
+		{
+			"name": "roboto",
+			"path": "./assets/fonts/Roboto-Black.ttf"
+		}
 	],
 	"sounds": [
 		

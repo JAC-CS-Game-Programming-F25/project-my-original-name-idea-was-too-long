@@ -1,4 +1,4 @@
-import State from "../../../lib/State";
+import State from "../../../lib/State.js";
 
 export default class DieRollingState extends State {
     /**

@@ -5,8 +5,8 @@ import ImageName from "../enums/ImageName.js";
 import { images } from "../globals.js";
 
 export default class Opponent extends Character {
-    static OPPONENT_PORTRAITS_HEIGHT = 100;
-    static OPPONENT_PORTRAITS_WIDTH = 100;
+    static OPPONENT_PORTRAITS_HEIGHT = 359;
+    static OPPONENT_PORTRAITS_WIDTH = 307;
 
     /**
      * An opponent who the player can challenge to a game of dice. Each opponent has their own money

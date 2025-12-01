@@ -1,4 +1,4 @@
-import { getRandomPositiveInteger } from "../../lib/Random";
+import { getRandomPositiveInteger } from "../../lib/Random.js";
 import Opponent from "../entities/Opponent.js";
 import DiceGameName from "../enums/DiceGameName.js"
 
