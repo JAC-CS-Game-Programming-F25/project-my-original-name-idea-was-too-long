@@ -4,15 +4,17 @@ import DieStateName from "../enums/DieStateName.js";
 import DieRollingState from "../states/dice/DieRollingState.js";
 import DieIdleState from "../states/dice/DieIdleState.js";
 import { getRandomPositiveInteger } from "../../lib/Random.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, matter, world } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, matter, world } from "../globals.js";
+import Sprite from "../../lib/Sprite.js";
+import ImageName from "../enums/ImageName.js";
 
 const { Composite } = matter;
 
 export default class Die extends GameObject {
-    static MIN_VALUE = 0;
+    static MIN_VALUE = 1;
     static MAX_VALUE = 6;
 
-    static WIDTH = 30;
+    static WIDTH = 32;
     static HEIGHT = Die.WIDTH;
 
     static MIN_ROLLING_VELOCITY = 0; // to change to a value that feels good.
@@ -21,6 +23,7 @@ export default class Die extends GameObject {
      * A singular 6 sided die which can be rolled as part of a dice game.
      */
     constructor() {
+        super();
         this.value = 1;
 
         // Whether the die is being prevented from rolling.
@@ -40,12 +43,28 @@ export default class Die extends GameObject {
         this.stateMachine.add(DieStateName.Idle, new DieIdleState(this));
         this.stateMachine.change(DieStateName.Idle);
 
-        this.sprites = {
-
-        } // To set up. If I have both idle and rolling sprites here I can render in Die class
-        // using the animation set by the state
-        this.currentAnimation = this.stateMachine.currentState.animation[this.value];
-        this.currentFrame = 1;
+        // Set up dice sprites.
+        const spriteSheet = images.get(ImageName.Dice);
+        this.sprites = [
+            // Idle sprites
+            new Sprite(spriteSheet, 0, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 1, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 2, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 3, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 4, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 5, 0, Die.WIDTH, Die.HEIGHT),
+            // Rolling animation sprites
+            new Sprite(spriteSheet, Die.WIDTH * 6, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 7, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 8, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 9, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 10, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 11, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 12, 0, Die.WIDTH, Die.HEIGHT),
+            new Sprite(spriteSheet, Die.WIDTH * 13, 0, Die.WIDTH, Die.HEIGHT),
+        ];
+        this.currentAnimation = this.stateMachine.currentState.animations[this.value - 1];
+        this.currentFrame = 0;
     }
 
     onRoll() {

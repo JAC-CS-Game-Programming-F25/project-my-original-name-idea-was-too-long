@@ -11,6 +11,12 @@
 			"path": "./assets/images/controls-stone.png",
 			"width": 960,
 			"height": 540
+		},
+		{
+			"name": "dice",
+			"path": "./assets/images/dice.png",
+			"width": 448,
+			"height": 32
 		}
 	],
 	"fonts": [

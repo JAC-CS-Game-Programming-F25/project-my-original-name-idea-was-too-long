@@ -1,8 +1,9 @@
 import State from "../../../lib/State.js";
 import Animation from "../../../lib/Animation.js";
 import Die from "../../objects/Die.js";
-import { matter, world } from "../../globals.js";
+import { images, matter, world } from "../../globals.js";
 import { getRandomPositiveNumber } from "../../../lib/Random.js";
+import ImageName from "../../enums/ImageName.js";
 
 const { Composite } = matter;
 
@@ -14,21 +15,23 @@ export default class DieIdleState extends State {
      * @param {Die} die 
      */
     constructor(die) {
+        super();
+
         this.die = die;
 
-        this.animations = {
-            [1]: new Animation(/* To fill when I have my sprites */),
-            [2]: new Animation(/* To fill when I have my sprites */),
-            [3]: new Animation(/* To fill when I have my sprites */),
-            [4]: new Animation(/* To fill when I have my sprites */),
-            [5]: new Animation(/* To fill when I have my sprites */),
-            [6]: new Animation(/* To fill when I have my sprites */)
-        }
+        this.animations = [
+            new Animation([0], 1),
+            new Animation([1], 1),
+            new Animation([2], 1),
+            new Animation([3], 1),
+            new Animation([4], 1),
+            new Animation([5], 1)
+        ]
     }
 
     enter() {
-        this.die.currentAnimation = this.animations[this.die.value];
-        this.die.currentFrame = this.die.value;
+        this.die.currentAnimation = this.animations[this.die.value - 1];
+        this.die.currentFrame = this.die.value - 1;
         this.setBody();
     }
 

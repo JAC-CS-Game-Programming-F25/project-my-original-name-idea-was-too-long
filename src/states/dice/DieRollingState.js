@@ -1,8 +1,14 @@
 import Animation from "../../../lib/Animation.js";
+import { getRandomPositiveNumber } from "../../../lib/Random.js";
 import State from "../../../lib/State.js";
+import { matter, world } from "../../globals.js";
 import Die from "../../objects/Die.js";
 
+const { Composite } = matter
+
 export default class DieRollingState extends State {
+    static ANIMATION_INTERVAL = 0.07;
+
     /**
      * In this state, a die is rolling and moving around, affected by collisions with other objects.
      * The die will leave this state once it's velocity has gone below a certain threshold.
@@ -10,21 +16,24 @@ export default class DieRollingState extends State {
      * @param {Die} die 
      */
     constructor(die) {
+        super();
+
         this.die = die;
 
-        this.animation = new Animation(/* To set a bunch of shit here so it animates across the roll forever */);
+        this.animations = new Animation([6, 7, 8, 9, 10, 11, 12, 13], DieRollingState.ANIMATION_INTERVAL);
     }
 
     enter() {
         // Set animation.
         this.setBody();
+        this.die.currentAnimation = this.animations;
 
         // Give push here or above?
     }
 
     update(dt) {
-        this.animation.update(dt);
-        this.die.currentFrame = this.animation.getCurrentFrame();
+        this.animations.update(dt);
+        this.die.currentFrame = this.animations.getCurrentFrame();
     }
 
     setBody() {

@@ -37,3 +37,16 @@ export const input = new Input(canvas);
 export const sounds = new Sounds();
 
 export const opponentFactory = new OpponentFactory();
+
+/**
+ * matter.js is the physics engine to be used for rolling dice collision.
+ * Matter is declared globally in index.html
+ * 
+ * @see https://brm.io/matter-js
+ */
+export const matter = Matter;
+// Set up the engine and disable gravity (since we're using a top-down view).
+export const engine = matter.Engine.create();
+engine.gravity.scale = 0;
+
+export const world = engine.world;
