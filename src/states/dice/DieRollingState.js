@@ -43,13 +43,13 @@ export default class DieRollingState extends State {
             oldBody.position.y,
             Die.WIDTH / 2,
             {
-                angle: getRandomPositiveNumber(0, 6.283) // angles are in radians
-                // More options? Density? Gotta play around with it.
+                angle: getRandomPositiveNumber(0, 6.283), // angles are in radians
+                restitution: 1
             }
         );
         Composite.remove(world, oldBody);
         Composite.add(world, this.die.body);
 
-        this.die.renderOffset = { x: Die.WIDTH / 2, y: Die.HEIGHT / 2 };
+        this.die.renderOffset = { x: -Die.WIDTH / 2, y: -Die.HEIGHT / 2 };
     }
 }

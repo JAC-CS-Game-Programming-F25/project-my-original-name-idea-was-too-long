@@ -50,6 +50,8 @@ export default class PlayState extends State {
 	}
 
 	update(dt) {
+		if (this.isStartupTransition) return;
+
 		// Update the matter.js physics engine.
 		Engine.update(engine);
 

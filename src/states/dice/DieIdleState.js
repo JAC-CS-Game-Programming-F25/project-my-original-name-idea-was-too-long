@@ -3,7 +3,6 @@ import Animation from "../../../lib/Animation.js";
 import Die from "../../objects/Die.js";
 import { images, matter, world } from "../../globals.js";
 import { getRandomPositiveNumber } from "../../../lib/Random.js";
-import ImageName from "../../enums/ImageName.js";
 
 const { Composite } = matter;
 
@@ -43,14 +42,13 @@ export default class DieIdleState extends State {
             Die.WIDTH,
             Die.HEIGHT,
             {
-                angle: getRandomPositiveNumber(0, 6.283) // angles are in radians
-                // More options? Density? Gotta play around with it.
-                // High density would make it not move much when hit, might have a friction value too.
+                angle: getRandomPositiveNumber(0, 6.283), // angles are in radians
+                frictionAir: 0.05
             }
         );
         Composite.remove(world, oldBody);
         Composite.add(world, this.die.body);
 
-        this.die.renderOffset = { x: Die.WIDTH / 2, y: Die.HEIGHT / 2 };
+        this.die.renderOffset = { x: -Die.WIDTH / 2, y: -Die.HEIGHT / 2 };
     }
 }

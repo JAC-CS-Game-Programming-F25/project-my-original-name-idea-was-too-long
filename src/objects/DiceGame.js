@@ -1,5 +1,10 @@
+import Input from "../../lib/Input.js";
+import { getRandomNumber, getRandomPositiveNumber } from "../../lib/Random.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
+import Direction from "../enums/Direction.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, input, matter } from "../globals.js";
+import Board from "./Board.js";
 import Die from "./Die.js";
 
 export default class DiceGame {
@@ -28,7 +33,21 @@ export default class DiceGame {
     }
 
     update(dt) {
+        // Update the dice and determine whether they have finished rolling.
+        this.isRolling = false;
+        this.dice.forEach((die) => {
+            die.update(dt);
+            if (die.isRolling()) this.isRolling = true;
+        });
+
         // Might be able to do some generic stuff here
+        if (this.isPlayerTurn) {
+            if (input.isKeyPressed(Input.KEYS.ENTER)) {
+                this.rollDice();
+            } else if (input.isKeyPressed(Input.KEYS.H)) {
+                // BRING UP HELP SCREEN
+            }
+        }
     }
 
     checkVictory() {
@@ -39,9 +58,17 @@ export default class DiceGame {
      * Roll all the game dice and add up their values into rolledValue.
      */
     rollDice() {
+        // Roll from the right as the player, from the left as the opponent.
+        const positionX = this.isPlayerTurn ? CANVAS_WIDTH / 2 + Board.WIDTH / 4 : CANVAS_WIDTH / 2 - Board.WIDTH / 4;
+        const direction = this.isPlayerTurn ? Direction.Left : Direction.Right;
+
         this.rolledValue = 0; // might replace this by a returned value?s
         this.dice.forEach((die) => {
-            die.onRoll();
+            const positionY = getRandomPositiveNumber(
+                CANVAS_HEIGHT / 2 - Board.HEIGHT / 8,
+                CANVAS_HEIGHT / 2 + Board.HEIGHT / 8
+            );
+            die.onRoll(direction, { x: positionX, y: positionY });
             this.rolledValue += die.value;
         });
         this.isRolling = true;
@@ -56,10 +83,12 @@ export default class DiceGame {
     rollBattle() {
         // Roll for player.
         this.dice[0].onRoll();
+        // this.setDieRoll(this.dice[0]);
         this.playerMark = this.dice[0].value;
 
         // Roll for opponent.
         this.dice[1].onRoll();
+        // this.setDieRoll(this.dice[1]);
         this.opponentMark = this.dice[1].value;
 
         // If there's a tie, fudge it so that the player wins the battle ;)
@@ -79,5 +108,8 @@ export default class DiceGame {
 
     render() {
         // Might be able to do the bulk of the render in here, with dice and popping ui elements.
+        this.dice.forEach((die) => {
+            die.render();
+        })
     }
 }
