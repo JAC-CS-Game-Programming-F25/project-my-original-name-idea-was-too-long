@@ -41,13 +41,15 @@ export default class DiceGame {
         });
 
         // Might be able to do some generic stuff here
-        if (this.isPlayerTurn) {
-            if (input.isKeyPressed(Input.KEYS.ENTER)) {
-                this.rollDice();
-            } else if (input.isKeyPressed(Input.KEYS.H)) {
-                // BRING UP HELP SCREEN
-            }
+        //if (this.isPlayerTurn) {
+        if (input.isKeyPressed(Input.KEYS.ENTER)) {
+            this.rollDice();
+        } else if (input.isKeyPressed(Input.KEYS.BACKSLASH)) {
+            this.rollBattle();
+        } else if (input.isKeyPressed(Input.KEYS.H)) {
+            // BRING UP HELP SCREEN
         }
+        //}
     }
 
     checkVictory() {
@@ -82,13 +84,11 @@ export default class DiceGame {
      */
     rollBattle() {
         // Roll for player.
-        this.dice[0].onRoll();
-        // this.setDieRoll(this.dice[0]);
+        this.dice[0].onRoll(Direction.Up, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 + Board.HEIGHT / 4 });
         this.playerMark = this.dice[0].value;
 
         // Roll for opponent.
-        this.dice[1].onRoll();
-        // this.setDieRoll(this.dice[1]);
+        this.dice[1].onRoll(Direction.Down, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 - Board.HEIGHT / 4 });
         this.opponentMark = this.dice[1].value;
 
         // If there's a tie, fudge it so that the player wins the battle ;)
