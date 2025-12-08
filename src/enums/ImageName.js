@@ -1,7 +1,8 @@
 const ImageName = {
     OpponentPortraits: "opponentPortraits",
     UIControls: "controlsStone",
-    Dice: "dice"
+    Dice: "dice",
+    Board: "board"
 };
 
 export default ImageName;
