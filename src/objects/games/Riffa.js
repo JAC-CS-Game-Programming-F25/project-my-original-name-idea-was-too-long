@@ -1,4 +1,4 @@
-import Character from "../../entities/Character";
+import Character from "../../entities/Character.js";
 import Opponent from "../../entities/Opponent.js";
 import DiceGame from "../DiceGame.js";
 

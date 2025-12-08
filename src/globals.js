@@ -50,3 +50,5 @@ export const engine = matter.Engine.create();
 engine.gravity.scale = 0;
 
 export const world = engine.world;
+
+export const DEBUG = true;

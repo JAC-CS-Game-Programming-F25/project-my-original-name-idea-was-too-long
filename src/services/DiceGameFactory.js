@@ -1,6 +1,6 @@
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
-import DiceGameName from "../enums/DiceGameName";
+import DiceGameName from "../enums/DiceGameName.js";    
 import Riffa from "../objects/games/Riffa.js";
 import Triga from "../objects/games/Triga.js";
 import Panquist from "../objects/games/Panquist.js";
