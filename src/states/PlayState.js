@@ -63,8 +63,16 @@ export default class PlayState extends State {
 	render() {
 		this.board.render();
 
-		this.game.render();
+		if (!this.isStartupTransition) {
+			this.game.render();
 
+			const opponentPortraitScale = 1;
+			this.opponent.portrait.render(
+				this.board.position.x - Opponent.OPPONENT_PORTRAITS_WIDTH * opponentPortraitScale + 20,
+				10,
+				{ x: opponentPortraitScale, y: opponentPortraitScale }
+			);
+		}
 		// Might render the shared ui here (or in game?)
 	}
 }

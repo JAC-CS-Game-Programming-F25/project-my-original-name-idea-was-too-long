@@ -3,7 +3,7 @@ import { getRandomNumber, getRandomPositiveNumber } from "../../lib/Random.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, input, matter } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter } from "../globals.js";
 import Board from "./Board.js";
 import Die from "./Die.js";
 
@@ -110,6 +110,36 @@ export default class DiceGame {
         // Might be able to do the bulk of the render in here, with dice and popping ui elements.
         this.dice.forEach((die) => {
             die.render();
-        })
+        });
+
+        if (!this.isRolling) {
+            // Display the latest roll total.
+            const displayDiceScale = 2;
+            const displayDiceY = 100
+            this.dice[0].sprites[this.dice[0].value - 1].render(
+                CANVAS_WIDTH / 2 - Die.SPRITE_WIDTH * displayDiceScale * 2,
+                displayDiceY,
+                { x: displayDiceScale, y: displayDiceScale }
+            );
+            this.dice[1].sprites[this.dice[1].value - 1].render(
+                CANVAS_WIDTH / 2 - Die.SPRITE_WIDTH * displayDiceScale / 2,
+                displayDiceY,
+                { x: displayDiceScale, y: displayDiceScale }
+            );
+            this.dice[2].sprites[this.dice[2].value - 1].render(
+                CANVAS_WIDTH / 2 + Die.SPRITE_WIDTH * displayDiceScale,
+                displayDiceY,
+                { x: displayDiceScale, y: displayDiceScale }
+            );
+            context.save();
+            context.font = '60px manufacturingConsent';
+            context.fillStyle = 'white';
+            context.fillText(
+                `= ${this.rolledValue}`,
+                CANVAS_WIDTH / 2 + Die.SPRITE_WIDTH * displayDiceScale * 2 + 20,
+                displayDiceY + 50
+            );
+            context.restore();
+        }
     }
 }
