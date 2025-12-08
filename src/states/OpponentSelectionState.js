@@ -2,12 +2,12 @@ import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
 import State from "../../lib/State.js";
 import Timer from "../../lib/Timer.js";
-import Vector from "../../lib/Vector.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, opponentFactory } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, opponentFactory, stateStack } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
+import PlayState from "./PlayState.js";
 
 export default class OpponentSelectionState extends State {
     /**
@@ -55,7 +55,10 @@ export default class OpponentSelectionState extends State {
             } else if (input.isKeyPressed(Input.KEYS.D) || input.isKeyPressed(Input.KEYS.ARROW_RIGHT)) {
                 this.switchOpponent(1);
             } else if (input.isKeyPressed(Input.KEYS.ENTER)) {
-                // GO TO PLAY STATE AND START MATCH
+                stateStack.push(new PlayState(
+                    this.player,
+                    this.opponents[this.selectedOpponent]
+                ));
             } else if (input.isKeyPressed(Input.KEYS.H)) {
                 // BRING UP HELP SCREEN
             }
