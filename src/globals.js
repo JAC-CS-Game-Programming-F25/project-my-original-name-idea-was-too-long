@@ -51,4 +51,4 @@ engine.gravity.scale = 0;
 
 export const world = engine.world;
 
-export const DEBUG = true;
+export const DEBUG = false;

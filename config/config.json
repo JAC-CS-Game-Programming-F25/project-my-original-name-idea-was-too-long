@@ -23,6 +23,12 @@
 			"path": "./assets/images/board.png",
 			"width": 300,
 			"height": 300
+		},
+		{
+			"name": "parchment",
+			"path": "./assets/images/parchment.png",
+			"width": 321,
+			"height": 207
 		}
 	],
 	"fonts": [

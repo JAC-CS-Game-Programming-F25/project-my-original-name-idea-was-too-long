@@ -1,15 +1,20 @@
 import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
+import Sprite from "../../lib/Sprite.js";
 import State from "../../lib/State.js";
 import Timer from "../../lib/Timer.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, opponentFactory, stateStack } from "../globals.js";
+import ImageName from "../enums/ImageName.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, input, opponentFactory, stateStack } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
 import PlayState from "./PlayState.js";
 
 export default class OpponentSelectionState extends State {
+    static BACKGROUND_WIDTH = 321;
+    static BACKGROUND_HEIGHT = 207;
+
     /**
      * In this state, the player can cycle through possible opponents 
      * and select which one they want to challenge.
@@ -33,7 +38,7 @@ export default class OpponentSelectionState extends State {
         this.leftTransitionOffsetStart = -(CANVAS_WIDTH / 2) - Opponent.OPPONENT_PORTRAITS_WIDTH;
 
         // Define the arrow ui elements.
-        const arrowPadding = 100;
+        const arrowPadding = 240;
         this.leftArrow = new UIArrow(
             arrowPadding,
             CANVAS_HEIGHT / 2 - UIArrow.SPRITE_MEASUREMENTS_LEFT.height / 2,
@@ -44,6 +49,15 @@ export default class OpponentSelectionState extends State {
             CANVAS_HEIGHT / 2 - UIArrow.SPRITE_MEASUREMENTS_RIGHT.height / 2,
             Direction.Right
         );
+        // Define the background image.
+        this.background = new Sprite(
+            images.get(ImageName.Parchment),
+            0, 0,
+            OpponentSelectionState.BACKGROUND_WIDTH,
+            OpponentSelectionState.BACKGROUND_HEIGHT
+        );
+        // The alpha value for when rendering the UI.
+        this.alpha = { a: 1, fadeDuration: 1 };
 
         this.timer = new Timer();
     }
@@ -55,10 +69,7 @@ export default class OpponentSelectionState extends State {
             } else if (input.isKeyPressed(Input.KEYS.D) || input.isKeyPressed(Input.KEYS.ARROW_RIGHT)) {
                 this.switchOpponent(1);
             } else if (input.isKeyPressed(Input.KEYS.ENTER)) {
-                stateStack.push(new PlayState(
-                    this.player,
-                    this.opponents[this.selectedOpponent]
-                ));
+                this.fadeToPlayState();
             } else if (input.isKeyPressed(Input.KEYS.H)) {
                 // BRING UP HELP SCREEN
             }
@@ -94,14 +105,52 @@ export default class OpponentSelectionState extends State {
         )
     }
 
+    /**
+     * Fade the UI before pushing the PlayState onto the State Stack.
+     * Once the PlayState is popped, the UI will fade back in.
+     */
+    fadeToPlayState() {
+        // Fade out the UI before pushing the next state.
+        this.timer.tween(
+            this.alpha,
+            { a: 0 },
+            this.alpha.fadeDuration,
+            Easing.linear,
+            () => {
+                stateStack.push(new PlayState(
+                    this.player,
+                    this.opponents[this.selectedOpponent]
+                ));
+                // Once the PlayState is popped from the stack, the Opponent Selection UI should fade back in.
+                this.timer.tween(
+                    this.alpha,
+                    { a: 1 },
+                    this.alpha.fadeDuration,
+                    Easing.linear
+                    // Might want another variable for locking the player from doing stuff until done.
+                );
+            }
+        );
+    }
 
     //#region Render methods
 
     render() {
         context.save();
+        context.globalAlpha = this.alpha.a;
+        this.renderBackground();
         this.renderOpponent();
         this.renderUI();
         context.restore();
+    }
+
+    renderBackground() {
+        const scaleFactor = 5;
+        this.background.render(
+            CANVAS_WIDTH / 2 - OpponentSelectionState.BACKGROUND_WIDTH * scaleFactor / 2,
+            CANVAS_HEIGHT / 2 - OpponentSelectionState.BACKGROUND_HEIGHT * scaleFactor / 2,
+            { x: scaleFactor, y: scaleFactor }
+        );
     }
 
     renderOpponent() {
@@ -158,7 +207,7 @@ export default class OpponentSelectionState extends State {
         context.fillText(`${this.player.money}`, 195, 100);
 
         context.font = '60px manufacturingConsent';
-        const letterOffset = { x: 30, y: 65 };
+        const letterOffset = { x: 47, y: 65 };
         this.leftArrow.render();
         context.textAlign = 'left';
         context.fillText(
