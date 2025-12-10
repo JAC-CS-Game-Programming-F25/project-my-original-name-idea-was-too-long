@@ -1,6 +1,8 @@
 import Character from "../../entities/Character.js";
 import Opponent from "../../entities/Opponent.js";
 import GamePhase from "../../enums/GamePhase.js";
+import { stateStack } from "../../globals.js";
+import ShowResultState from "../../states/ShowResultState.js";
 import DiceGame from "../DiceGame.js";
 
 export default class Triga extends DiceGame {
@@ -23,6 +25,7 @@ export default class Triga extends DiceGame {
     }
 
     reset() {
+        super.reset();
         this.playerMark = 0;
         this.opponentMark = 0;
     }
@@ -32,6 +35,10 @@ export default class Triga extends DiceGame {
         if (this.isFirstRound() && (Triga.TRIGA_VALUES.includes(this.rolledValue) || this.isThreeOfAKind())) {
             this.didPlayerWin = this.isPlayerTurn;
             this.gamePhase = GamePhase.Result;
+            stateStack.push(new ShowResultState(
+                `Triga!\n${this.didPlayerWin ? "You Win" : `${this.opponent.name} Wins`}`,
+                { holdDuration: DiceGame.RESULT_STATE_HOLD_DURATION }
+            ));
             return;
         }
 
@@ -39,15 +46,29 @@ export default class Triga extends DiceGame {
         if (this.rolledValue === this.playerMark) {
             this.didPlayerWin = true;
             this.gamePhase = GamePhase.Result;
+            stateStack.push(new ShowResultState(
+                `You Win!\n${this.isPlayerTurn ? "You" : `${this.opponent.name}`} rolled ${this.isPlayerTurn ? "your own" : "your"} mark`,
+                {
+                    fontSize: DiceGame.RESULT_STATE_FONT_SIZE,
+                    holdDuration: DiceGame.RESULT_STATE_HOLD_DURATION
+                }
+            ));
             return;
         }
         if (this.rolledValue === this.opponentMark) {
             this.didPlayerWin = false;
             this.gamePhase = GamePhase.Result;
+            stateStack.push(new ShowResultState(
+                `${this.opponent.name} Wins!\n${this.isPlayerTurn ? "You" : "They"} rolled ${this.isPlayerTurn ? "their" : "their own"} mark`,
+                {
+                    fontSize: DiceGame.RESULT_STATE_FONT_SIZE,
+                    holdDuration: DiceGame.RESULT_STATE_HOLD_DURATION
+                }
+            ));
             return;
         }
 
-        // If its the first round and the roller doesn't have a mark yet, assign it to them.
+        // If it's the first round and the roller doesn't have a mark yet, assign it to them.
         if (this.isFirstRound()) {
             this.isPlayerTurn ? this.playerMark = this.rolledValue : this.opponentMark = this.rolledValue;
         }

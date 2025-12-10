@@ -31,6 +31,9 @@ export default class Opponent extends Character {
             Opponent.OPPONENT_PORTRAITS_WIDTH,
             Opponent.OPPONENT_PORTRAITS_HEIGHT
         );
+
+        // Whether the opponent is waiting for a timer to run out before they act.
+        this.isWaiting = false;
     }
 
     /**

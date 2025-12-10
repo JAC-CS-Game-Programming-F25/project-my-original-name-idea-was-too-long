@@ -5,13 +5,20 @@ import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
 import GameStateName from "../enums/GameStateName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack, timer } from "../globals.js";
 import ShowResultState from "../states/ShowResultState.js";
 import WagerState from "../states/WagerState.js";
 import Board from "./Board.js";
 import Die from "./Die.js";
 
 export default class DiceGame {
+    // Values for setting the Show Result State after someone wins the match.
+    static RESULT_STATE_FONT_SIZE = 50;
+    static RESULT_STATE_HOLD_DURATION = 1.5;
+
+    // The time that the opponent will delay before they roll their dice,
+    // giving the player the chance to see their roll.
+    static OPPONENT_DELAY_BEFORE_ROLL = 1;
 
     /**
      * An abstract dice game, to be used as the parent of all dice games.
@@ -23,9 +30,6 @@ export default class DiceGame {
         this.player = player;
         this.opponent = opponent;
 
-        // The saved results of the player and opponent's dice rolls.
-        this.playerMark = 0; // Will prob remove these and have them in individual games instead. Not all dice games "need" to have this.
-        this.opponentMark = 0; // Plus makes more sense to compare and render these in the particular games since they have their own logic.
         // The most recent roll result.
         this.rolledValue = 0;
 
@@ -35,6 +39,7 @@ export default class DiceGame {
         this.wagerAmount = 0;
         this.isPlayerTurn = true;
         this.didPlayerWin = true;
+        this.isFirstRoll = true;
 
         // The specific phase of the current game.
         this.gamePhase = GamePhase.Wager;
@@ -75,16 +80,33 @@ export default class DiceGame {
                 break;
 
             case GamePhase.ToRoll:
-                // Roll right away if it's opponent's turn, or when Enter is pressed if it's the player's turn.
-                if (!this.isPlayerTurn ||
-                    (this.isPlayerTurn && input.isKeyPressed(Input.KEYS.ENTER))
-                ) {
+                // If it's the player's turn, roll only once Enter is pressed.
+                if (this.isPlayerTurn && input.isKeyPressed(Input.KEYS.ENTER)) {
                     this.rollDice();
                     this.gamePhase = GamePhase.Rolling;
+                }
+                // If it's the opponent's turn, roll right away if it's the first roll, or after a delay on subsequent rolls.
+                else if (!this.isPlayerTurn) {
+                    if (this.isFirstRoll) {
+                        this.rollDice();
+                        this.gamePhase = GamePhase.Rolling;
+                    } else if (!this.opponent.isWaiting) {
+                        this.opponent.isWaiting = true;
+                        timer.addTask(() => { },
+                            DiceGame.OPPONENT_DELAY_BEFORE_ROLL,
+                            DiceGame.OPPONENT_DELAY_BEFORE_ROLL,
+                            () => {
+                                this.rollDice();
+                                this.gamePhase = GamePhase.Rolling;
+                                this.opponent.isWaiting = false;
+                            }
+                        );
+                    }
                 }
                 break;
 
             case GamePhase.Rolling:
+                this.isFirstRoll = false;
                 // What to do with the roll will depend on the specific game being played.
                 this.checkRoll();
                 break;
@@ -117,7 +139,7 @@ export default class DiceGame {
      * Reset starting values at the end of a match.
      */
     reset() {
-        // To be implemented by the particular games.
+        this.isFirstRoll = true;
     }
 
     /**
@@ -212,7 +234,7 @@ export default class DiceGame {
             die.render();
         });
 
-        if (!this.isRolling) {
+        if (!this.isRolling && !this.isFirstRoll) {
             // Display the latest roll total.
             const displayDiceScale = 2;
             const displayDiceY = 100
