@@ -5,7 +5,8 @@ import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
 import GameStateName from "../enums/GameStateName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, stateStack } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack } from "../globals.js";
+import WagerState from "../states/WagerState.js";
 import Board from "./Board.js";
 import Die from "./Die.js";
 
@@ -30,8 +31,7 @@ export default class DiceGame {
         this.dice = [new Die(), new Die(), new Die()];
         this.isRolling = false;
 
-        // The wager object to be passed to the Wager State, so that the value set persists across states.
-        this.wagerObject = { wager: 0 }; // if passing a setter works in JS, I might do that instead.
+        this.wagerAmount = 0;
         this.isPlayerTurn = true;
         this.didPlayerWin = true;
 
@@ -52,36 +52,46 @@ export default class DiceGame {
 
         // Determine what can be done based on which phase of the game you are in.
         switch (this.gamePhase) {
+
             case GamePhase.Wager:
-                // Bring up wager state, pass it the wager object.
+                // Bring up wager state to get player's wager, and then proceed to the battle phase.
+                stateStack.push(new WagerState(this.player.money, this.opponent.money, (wager) => {
+                    this.wagerAmount = wager;
+                }));
                 this.gamePhase = GamePhase.Battle
                 break;
+
             case GamePhase.Battle:
                 this.rollBattle()
                 this.gamePhase = GamePhase.BattleRolling;
                 break;
+
             case GamePhase.BattleRolling:
                 // Pop up the UI element showing who won the battle.
 
                 this.gamePhase = GamePhase.ToRoll;
                 break;
+
             case GamePhase.ToRoll:
-                // Roll right away if it's opponent's turn, or when Space is pressed if it's the player's turn.
+                // Roll right away if it's opponent's turn, or when Enter is pressed if it's the player's turn.
                 if (!this.isPlayerTurn ||
-                    (this.isPlayerTurn && input.isKeyPressed(Input.KEYS.SPACE))
+                    (this.isPlayerTurn && input.isKeyPressed(Input.KEYS.ENTER))
                 ) {
                     this.rollDice();
                     this.gamePhase = GamePhase.Rolling;
                 }
                 break;
+
             case GamePhase.Rolling:
                 // What to do with the roll will depend on the specific game being played.
                 this.checkRoll();
                 break;
+
             case GamePhase.Result:
                 // Pop up result UI element based on who won.
                 this.dealOutWinnings();
                 break;
+
             case GamePhase.PostGame:
                 if (this.player.isBroke()) {
                     // If the player has run out of money, they lose!
@@ -93,13 +103,12 @@ export default class DiceGame {
         }
 
 
-
         // Misc testing stuff to remove.
-        if (input.isKeyPressed(Input.KEYS.ENTER)) {
-            this.rollDice();
-        } else if (input.isKeyPressed(Input.KEYS.BACKSLASH)) {
-            this.rollBattle();
-        }
+        // if (input.isKeyPressed(Input.KEYS.ENTER)) {
+        //     this.rollDice();
+        // } else if (input.isKeyPressed(Input.KEYS.BACKSLASH)) {
+        //     this.rollBattle();
+        // }
     }
 
     checkRoll() {
@@ -145,6 +154,12 @@ export default class DiceGame {
         this.dice[1].onRoll(Direction.Down, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 - Board.HEIGHT / 4 });
         this.opponentMark = this.dice[1].value;
 
+        // Move the third die offscreen so it doesn't get in the way.
+        matter.Body.setPosition(this.dice[2].body, {
+            x: CANVAS_WIDTH - Die.WIDTH * 2,
+            y: 0
+        });
+
         // If there's a tie, fudge it so that the player wins the battle ;)
         if (this.playerMark === this.opponentMark) {
             if (this.playerMark === Die.MAX_VALUE) {
@@ -165,12 +180,11 @@ export default class DiceGame {
      * If so, go back to the wager phase, otherwise go to the post-game phase.
      */
     dealOutWinnings() {
-        const wager = this.wagerObject.wager;
         const winner = this.didPlayerWin ? this.player : this.opponent;
         const loser = this.didPlayerWin ? this.opponent : this.player;
 
-        loser.loseMoney(wager);
-        winner.winMoney(wager);
+        loser.loseMoney(this.wagerAmount);
+        winner.winMoney(this.wagerAmount);
 
         if (loser.isBroke()) {
             this.gamePhase = GamePhase.PostGame;
@@ -214,5 +228,8 @@ export default class DiceGame {
             );
             context.restore();
         }
+
+        // Temp display phase
+        context.fillText(`${this.gamePhase}`, CANVAS_WIDTH - 200, CANVAS_HEIGHT - 200)
     }
 }
