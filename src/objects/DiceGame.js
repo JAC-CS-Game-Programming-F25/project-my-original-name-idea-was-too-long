@@ -6,6 +6,7 @@ import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
 import GameStateName from "../enums/GameStateName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack } from "../globals.js";
+import ShowResultState from "../states/ShowResultState.js";
 import WagerState from "../states/WagerState.js";
 import Board from "./Board.js";
 import Die from "./Die.js";
@@ -62,13 +63,14 @@ export default class DiceGame {
                 break;
 
             case GamePhase.Battle:
+                // Roll the battle to determine who goes first.
                 this.rollBattle()
                 this.gamePhase = GamePhase.BattleRolling;
                 break;
 
             case GamePhase.BattleRolling:
-                // Pop up the UI element showing who won the battle.
-
+                // Bring up the result UI showing who won the battle.
+                stateStack.push(new ShowResultState(`${this.isPlayerTurn ? "You Go First" : "Opponent Goes First"}`));
                 this.gamePhase = GamePhase.ToRoll;
                 break;
 
