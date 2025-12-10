@@ -70,16 +70,25 @@ export default class UITextBox extends UIElement {
     render() {
         context.save();
         context.textBaseline = 'top';
-        context.textAlign = this.textAlignment;
         context.font = `${this.fontSize}px ${this.fontFamily}`;
         context.fillStyle = this.fontColour;
+        context.textAlign = this.textAlignment;
+
+        // If the text alignment is something other than left, adjust the offset so the text renders in the right spot.
+        let offset = 0;
+        if (this.textAlignment === 'center') {
+            offset = this.dimensions.x / 2
+        } else if (this.textAlignment === 'right') {
+            offset = this.dimensions.x
+        }
+
         this.lines.forEach((line, index) => {
             context.fillText(
                 line,
-                this.position.x,
+                this.position.x + offset,
                 this.position.y + index * this.fontSize
             );
         });
-        context.save();
+        context.restore();
     }
 }

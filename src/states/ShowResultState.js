@@ -1,7 +1,7 @@
 import Easing from "../../lib/Easing.js";
 import State from "../../lib/State.js";
 import Timer from "../../lib/Timer.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, stateStack } from "../globals";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, stateStack } from "../globals.js";
 import UIElement from "../user-interface/UIElement.js";
 import UITextBox from "../user-interface/UITextBox.js";
 
@@ -11,11 +11,11 @@ export default class ShowResultState extends State {
     static TEXT_PADDING = 20;
 
     // Timing for the sweep across animation.
-    static PAN_DURATION = 0.5;
-    static HOLD_DURATION = 0.75;
+    static PAN_DURATION = 0.75;
+    static HOLD_DURATION = 1;
 
     /**
-     * Slides a UI elements with a specified text across the screen. The text remains on screen momentarily before
+     * Slides a UI element with a specified text across the screen. The text remains on screen momentarily before
      * sliding back off, with the State popping itself back off of the State Stack.
      * 
      * @param {string} text The result to display on screen.
@@ -39,7 +39,8 @@ export default class ShowResultState extends State {
             {
                 fontFamily: 'manufacturedConsent',
                 fontColour: 'black',
-                fontSize: 60
+                fontSize: 60,
+                textAlignment: 'center'
             }
         );
 
@@ -47,6 +48,7 @@ export default class ShowResultState extends State {
     }
 
     enter() {
+        // Tween the result panel onto the screen.
         this.timer.tween(
             this.background.position,
             { x: CANVAS_WIDTH / 2 - this.background.dimensions.x / 2 },
@@ -58,6 +60,9 @@ export default class ShowResultState extends State {
         );
     }
 
+    /**
+     * Set the timer for how long the result panel will wait on the screen before tweening off.
+     */
     setHoldTimer() {
         this.timer.addTask(
             () => { },
@@ -69,6 +74,9 @@ export default class ShowResultState extends State {
         );
     }
 
+    /**
+     * Set the tween for the panel to leave the screen, and then pop this state off of the state stack.
+     */
     setEaseOut() {
         this.timer.tween(
             this.background.position,
