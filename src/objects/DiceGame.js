@@ -23,8 +23,8 @@ export default class DiceGame {
         this.opponent = opponent;
 
         // The saved results of the player and opponent's dice rolls.
-        this.playerMark = 0;
-        this.opponentMark = 0;
+        this.playerMark = 0; // Will prob remove these and have them in individual games instead. Not all dice games "need" to have this.
+        this.opponentMark = 0; // Plus makes more sense to compare and render these in the particular games since they have their own logic.
         // The most recent roll result.
         this.rolledValue = 0;
 
@@ -97,7 +97,7 @@ export default class DiceGame {
                     // If the player has run out of money, they lose!
                     stateStack.push(GameStateName.GameOver);
                 } else {
-
+                    // Go back to Opponent selection, (check there if any opponents still have money, if not: Victory State)
                 }
                 break;
         }
@@ -111,8 +111,18 @@ export default class DiceGame {
         // }
     }
 
+    /**
+     * Reset starting values at the end of a match.
+     */
+    reset() {
+        // To be implemented by the particular games.
+    }
+
+    /**
+     * Check the result of the roll and proceed according to the rules of the game.
+     */
     checkRoll() {
-        // Not sure I'll be able to do anything here, might be only implemented in children.
+        // To be implemented by the particular games.
     }
 
     checkVictory() {
@@ -148,11 +158,11 @@ export default class DiceGame {
     rollBattle() {
         // Roll for player.
         this.dice[0].onRoll(Direction.Up, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 + Board.HEIGHT / 4 });
-        this.playerMark = this.dice[0].value;
+        let playerRoll = this.dice[0].value;
 
         // Roll for opponent.
         this.dice[1].onRoll(Direction.Down, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 - Board.HEIGHT / 4 });
-        this.opponentMark = this.dice[1].value;
+        let opponentRoll = this.dice[1].value;
 
         // Move the third die offscreen so it doesn't get in the way.
         matter.Body.setPosition(this.dice[2].body, {
@@ -161,18 +171,18 @@ export default class DiceGame {
         });
 
         // If there's a tie, fudge it so that the player wins the battle ;)
-        if (this.playerMark === this.opponentMark) {
-            if (this.playerMark === Die.MAX_VALUE) {
-                this.opponentMark--;
+        if (playerRoll === opponentRoll) {
+            if (playerRoll === Die.MAX_VALUE) {
+                opponentRoll--;
                 this.dice[1].value--;
             } else {
-                this.playerMark++;
+                playerRoll++;
                 this.dice[0].value++;
             }
         }
 
         this.isRolling = true;
-        this.isPlayerTurn = this.playerMark > this.opponentMark;
+        this.isPlayerTurn = playerRoll > opponentRoll;
     }
 
     /**
@@ -190,6 +200,7 @@ export default class DiceGame {
             this.gamePhase = GamePhase.PostGame;
         } else {
             this.gamePhase = GamePhase.Wager;
+            this.reset();
         }
     }
 
