@@ -71,15 +71,20 @@ export default class WagerState extends State {
         }
 
         if (input.isKeyPressed(Input.KEYS.W) || input.isKeyPressed(Input.KEYS.ARROW_UP)) {
+            // Increment wager.
             this.updateWager(1);
         } else if (input.isKeyPressed(Input.KEYS.S) || input.isKeyPressed(Input.KEYS.ARROW_DOWN)) {
+            // Decrement wager.
             this.updateWager(-1);
         } else if (input.isKeyPressed(Input.KEYS.ENTER)) {
+            // Accept wager.
             this.acceptWager();
         } else if (input.isKeyPressed(Input.KEYS.H)) {
             // BRING UP HELP SCREEN
         } else if (input.isKeyPressed(Input.KEYS.ESCAPE)) {
-            // RETURN TO OPPONENT SELECTION
+            // Return to Opponent Selection.
+            stateStack.pop();
+            stateStack.pop(); // Will probably replace this with a "transition out" function in PlayState.
         }
     }
 
