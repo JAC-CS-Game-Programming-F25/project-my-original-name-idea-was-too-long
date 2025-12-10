@@ -2,9 +2,11 @@ import State from "../../lib/State.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import DiceGameFactory from "../services/DiceGameFactory.js";
-import { CANVAS_WIDTH, engine, matter, timer, world } from "../globals.js";
+import { CANVAS_WIDTH, engine, input, matter, timer, world } from "../globals.js";
 import Board from "../objects/Board.js";
 import Easing from "../../lib/Easing.js";
+import Input from "../../lib/Input.js";
+import GamePhase from "../enums/GamePhase.js";
 
 const { Composite, Engine } = matter;
 
@@ -57,7 +59,9 @@ export default class PlayState extends State {
 
 		this.game.update(dt);
 
-		// Do other stuff.
+		if (input.isKeyPressed(Input.KEYS.H)) {
+			// BRING UP HELP SCREEN.
+		}
 	}
 
 	render() {
