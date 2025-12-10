@@ -12,6 +12,8 @@ export default class UIElement {
     constructor(x, y, width, height) {
         this.position = new Vector(x, y);
         this.dimensions = new Vector(width, height);
+
+        this.alpha = 1;
     }
 
     render(scale = { x: 1, y: 1 }) { }

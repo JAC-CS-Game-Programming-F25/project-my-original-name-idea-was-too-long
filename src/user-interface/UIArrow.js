@@ -6,8 +6,10 @@ import { images } from "../globals.js";
 import UIElement from "./UIElement.js";
 
 export default class UIArrow extends UIElement {
-    static SPRITE_MEASUREMENTS_LEFT = { x: 123, y: 118, width: 46, height: 91 }
-    static SPRITE_MEASUREMENTS_RIGHT = { x: 297, y: 118, width: 46, height: 91 }
+    static SPRITE_MEASUREMENTS_LEFT = { x: 123, y: 118, width: 46, height: 91 };
+    static SPRITE_MEASUREMENTS_RIGHT = { x: 297, y: 118, width: 46, height: 91 };
+    static SPRITE_MEASUREMENTS_UP = { x: 73, y: 259, width: 91, height: 46 };
+    static SPRITE_MEASUREMENTS_DOWN = { x: 188, y: 257, width: 91, height: 46 };
 
     /**
      * A directional arrow UI element.
@@ -27,6 +29,12 @@ export default class UIArrow extends UIElement {
                 break;
             case Direction.Right:
                 spriteMeasurements = UIArrow.SPRITE_MEASUREMENTS_RIGHT;
+                break;
+            case Direction.Up:
+                spriteMeasurements = UIArrow.SPRITE_MEASUREMENTS_UP;
+                break;
+            case Direction.Down:
+                spriteMeasurements = UIArrow.SPRITE_MEASUREMENTS_DOWN;
                 break;
             default:
                 console.log("You screwed up defining the direction for your arrow UI element");
