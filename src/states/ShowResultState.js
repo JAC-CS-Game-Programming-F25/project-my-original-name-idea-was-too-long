@@ -9,6 +9,7 @@ export default class ShowResultState extends State {
     static PANEL_HEIGHT = 200;
     static PANEL_WIDTH = 600;
     static TEXT_PADDING = 20;
+    static FONT_SIZE = 60;
 
     // Timing for the sweep across animation.
     static PAN_DURATION = 0.75;
@@ -19,15 +20,21 @@ export default class ShowResultState extends State {
      * sliding back off, with the State popping itself back off of the State Stack.
      * 
      * @param {string} text The result to display on screen.
+     * @param {object} options Options for determining the size of the UI panel, the font size, and the length of time that the animation holds.
      */
-    constructor(text) {
+    constructor(text, options = {}) {
         super();
+
+        const backgroundWidth = options.backgroundWidth ?? ShowResultState.PANEL_WIDTH;
+        const backgroundHeight = options.backgroundHeight ?? ShowResultState.PANEL_HEIGHT;
+        const fontSize = options.fontSize ?? ShowResultState.FONT_SIZE;
+        this.holdDuration = options.holdDuration ?? ShowResultState.HOLD_DURATION;
 
         this.background = new UIElement(
             CANVAS_WIDTH,
-            CANVAS_HEIGHT / 2 - ShowResultState.PANEL_HEIGHT / 2,
-            ShowResultState.PANEL_WIDTH,
-            ShowResultState.PANEL_HEIGHT
+            CANVAS_HEIGHT / 2 - backgroundHeight / 2,
+            backgroundWidth,
+            backgroundHeight
         );
 
         this.textBox = new UITextBox(
@@ -37,9 +44,9 @@ export default class ShowResultState extends State {
             this.background.dimensions.x - ShowResultState.TEXT_PADDING * 2,
             this.background.dimensions.y - ShowResultState.TEXT_PADDING * 2,
             {
-                fontFamily: 'manufacturedConsent',
+                fontFamily: 'serif',
                 fontColour: 'black',
-                fontSize: 60,
+                fontSize: fontSize,
                 textAlignment: 'center'
             }
         );
@@ -66,8 +73,8 @@ export default class ShowResultState extends State {
     setHoldTimer() {
         this.timer.addTask(
             () => { },
-            ShowResultState.HOLD_DURATION,
-            ShowResultState.HOLD_DURATION,
+            this.holdDuration,
+            this.holdDuration,
             () => {
                 this.setEaseOut();
             }

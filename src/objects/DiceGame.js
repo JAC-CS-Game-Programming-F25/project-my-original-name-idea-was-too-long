@@ -5,13 +5,21 @@ import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
 import GameStateName from "../enums/GameStateName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack, timer } from "../globals.js";
+import PlayState from "../states/PlayState.js";
 import ShowResultState from "../states/ShowResultState.js";
 import WagerState from "../states/WagerState.js";
 import Board from "./Board.js";
 import Die from "./Die.js";
 
 export default class DiceGame {
+    // Values for setting the Show Result State after someone wins the match.
+    static RESULT_STATE_FONT_SIZE = 50;
+    static RESULT_STATE_HOLD_DURATION = 1.5;
+
+    // The time that the opponent will delay before they roll their dice,
+    // giving the player the chance to see their roll.
+    static OPPONENT_DELAY_BEFORE_ROLL = 1;
 
     /**
      * An abstract dice game, to be used as the parent of all dice games.
@@ -23,9 +31,6 @@ export default class DiceGame {
         this.player = player;
         this.opponent = opponent;
 
-        // The saved results of the player and opponent's dice rolls.
-        this.playerMark = 0;
-        this.opponentMark = 0;
         // The most recent roll result.
         this.rolledValue = 0;
 
@@ -35,9 +40,13 @@ export default class DiceGame {
         this.wagerAmount = 0;
         this.isPlayerTurn = true;
         this.didPlayerWin = true;
+        this.isFirstRoll = true;
 
         // The specific phase of the current game.
         this.gamePhase = GamePhase.Wager;
+
+        // To enable or disable the dice total display at the end of each roll.
+        this.enableDiceTotalDisplay = true;
     }
 
     update(dt) {
@@ -75,16 +84,33 @@ export default class DiceGame {
                 break;
 
             case GamePhase.ToRoll:
-                // Roll right away if it's opponent's turn, or when Enter is pressed if it's the player's turn.
-                if (!this.isPlayerTurn ||
-                    (this.isPlayerTurn && input.isKeyPressed(Input.KEYS.ENTER))
-                ) {
+                // If it's the player's turn, roll only once Enter is pressed.
+                if (this.isPlayerTurn && input.isKeyPressed(Input.KEYS.ENTER)) {
                     this.rollDice();
                     this.gamePhase = GamePhase.Rolling;
+                }
+                // If it's the opponent's turn, roll right away if it's the first roll, or after a delay on subsequent rolls.
+                else if (!this.isPlayerTurn) {
+                    if (this.isFirstRoll) {
+                        this.rollDice();
+                        this.gamePhase = GamePhase.Rolling;
+                    } else if (!this.opponent.isWaiting) {
+                        this.opponent.isWaiting = true;
+                        timer.addTask(() => { },
+                            DiceGame.OPPONENT_DELAY_BEFORE_ROLL,
+                            DiceGame.OPPONENT_DELAY_BEFORE_ROLL,
+                            () => {
+                                this.rollDice();
+                                this.gamePhase = GamePhase.Rolling;
+                                this.opponent.isWaiting = false;
+                            }
+                        );
+                    }
                 }
                 break;
 
             case GamePhase.Rolling:
+                this.isFirstRoll = false;
                 // What to do with the roll will depend on the specific game being played.
                 this.checkRoll();
                 break;
@@ -99,7 +125,7 @@ export default class DiceGame {
                     // If the player has run out of money, they lose!
                     stateStack.push(GameStateName.GameOver);
                 } else {
-
+                    // Go back to Opponent selection, (check there if any opponents still have money, if not: Victory State)
                 }
                 break;
         }
@@ -113,12 +139,18 @@ export default class DiceGame {
         // }
     }
 
-    checkRoll() {
-        // Not sure I'll be able to do anything here, might be only implemented in children.
+    /**
+     * Reset starting values at the end of a match.
+     */
+    reset() {
+        this.isFirstRoll = true;
     }
 
-    checkVictory() {
-        // Not sure I'll be able to do anything here, might be only implemented in children.
+    /**
+     * Check the result of the roll and proceed according to the rules of the game.
+     */
+    checkRoll() {
+        // To be implemented by the particular games.
     }
 
     /**
@@ -139,8 +171,6 @@ export default class DiceGame {
             this.rolledValue += die.value;
         });
         this.isRolling = true;
-
-        // do something with the rolled value depending on the game.
     }
 
     /**
@@ -150,11 +180,11 @@ export default class DiceGame {
     rollBattle() {
         // Roll for player.
         this.dice[0].onRoll(Direction.Up, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 + Board.HEIGHT / 4 });
-        this.playerMark = this.dice[0].value;
+        let playerRoll = this.dice[0].value;
 
         // Roll for opponent.
         this.dice[1].onRoll(Direction.Down, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 - Board.HEIGHT / 4 });
-        this.opponentMark = this.dice[1].value;
+        let opponentRoll = this.dice[1].value;
 
         // Move the third die offscreen so it doesn't get in the way.
         matter.Body.setPosition(this.dice[2].body, {
@@ -163,18 +193,18 @@ export default class DiceGame {
         });
 
         // If there's a tie, fudge it so that the player wins the battle ;)
-        if (this.playerMark === this.opponentMark) {
-            if (this.playerMark === Die.MAX_VALUE) {
-                this.opponentMark--;
+        if (playerRoll === opponentRoll) {
+            if (playerRoll === Die.MAX_VALUE) {
+                opponentRoll--;
                 this.dice[1].value--;
             } else {
-                this.playerMark++;
+                playerRoll++;
                 this.dice[0].value++;
             }
         }
 
         this.isRolling = true;
-        this.isPlayerTurn = this.playerMark > this.opponentMark;
+        this.isPlayerTurn = playerRoll > opponentRoll;
     }
 
     /**
@@ -192,16 +222,16 @@ export default class DiceGame {
             this.gamePhase = GamePhase.PostGame;
         } else {
             this.gamePhase = GamePhase.Wager;
+            this.reset();
         }
     }
 
     render() {
-        // Might be able to do the bulk of the render in here, with dice and popping ui elements.
         this.dice.forEach((die) => {
             die.render();
         });
 
-        if (!this.isRolling) {
+        if (this.enableDiceTotalDisplay && !this.isRolling && !this.isFirstRoll) {
             // Display the latest roll total.
             const displayDiceScale = 2;
             const displayDiceY = 100
@@ -227,6 +257,23 @@ export default class DiceGame {
                 `= ${this.rolledValue}`,
                 CANVAS_WIDTH / 2 + Die.SPRITE_WIDTH * displayDiceScale * 2 + 20,
                 displayDiceY + 50
+            );
+            context.restore();
+        }
+
+        if (this.isPlayerTurn && this.gamePhase === GamePhase.ToRoll && stateStack.top() instanceof PlayState) {
+            context.save();
+            context.font = '50px roboto';
+            context.fillStyle = 'white';
+            context.textAlign = 'center';
+            context.shadowColor = 'black';
+            context.shadowOffsetX = 2;
+            context.shadowOffsetY = 1;
+            context.shadowBlur = 4;
+            context.fillText(
+                "Press ENTER to Roll",
+                CANVAS_WIDTH / 2,
+                CANVAS_HEIGHT - 150
             );
             context.restore();
         }
