@@ -44,6 +44,9 @@ export default class DiceGame {
 
         // The specific phase of the current game.
         this.gamePhase = GamePhase.Wager;
+
+        // To enable or disable the dice total display at the end of each roll.
+        this.enableDiceTotalDisplay = true;
     }
 
     update(dt) {
@@ -228,7 +231,7 @@ export default class DiceGame {
             die.render();
         });
 
-        if (!this.isRolling && !this.isFirstRoll) {
+        if (this.enableDiceTotalDisplay && !this.isRolling && !this.isFirstRoll) {
             // Display the latest roll total.
             const displayDiceScale = 2;
             const displayDiceY = 100
