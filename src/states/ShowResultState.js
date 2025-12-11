@@ -44,7 +44,7 @@ export default class ShowResultState extends State {
             this.background.dimensions.x - ShowResultState.TEXT_PADDING * 2,
             this.background.dimensions.y - ShowResultState.TEXT_PADDING * 2,
             {
-                fontFamily: 'manufacturedConsent',
+                fontFamily: 'serif',
                 fontColour: 'black',
                 fontSize: fontSize,
                 textAlignment: 'center'

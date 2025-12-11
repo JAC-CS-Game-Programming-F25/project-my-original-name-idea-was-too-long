@@ -1,7 +1,7 @@
 import Character from "../../entities/Character.js";
 import Opponent from "../../entities/Opponent.js";
 import GamePhase from "../../enums/GamePhase.js";
-import { stateStack } from "../../globals.js";
+import { CANVAS_HEIGHT, context, stateStack } from "../../globals.js";
 import ShowResultState from "../../states/ShowResultState.js";
 import DiceGame from "../DiceGame.js";
 
@@ -90,5 +90,22 @@ export default class Triga extends DiceGame {
      */
     isThreeOfAKind() {
         return this.dice[0].value === this.dice[1].value && this.dice[0].value === this.dice[2].value;
+    }
+
+    render() {
+        super.render();
+
+        // Render the current marks.
+        context.save();
+        const textX = 40;
+        const textY = CANVAS_HEIGHT - CANVAS_HEIGHT / 3;
+        context.fillStyle = 'black';
+        context.textAlign = 'left';
+        context.font = '50px manufacturingConsent';
+        context.fillText(`Your Mark:`, textX, textY);
+        context.fillText(`${this.playerMark}`, textX, textY + 50);
+        context.fillText(`Opponent's Mark:`, textX, textY + 120);
+        context.fillText(`${this.opponentMark}`, textX, textY + 170);
+        context.restore();
     }
 }

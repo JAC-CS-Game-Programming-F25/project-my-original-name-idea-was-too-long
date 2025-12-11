@@ -6,6 +6,7 @@ import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
 import GameStateName from "../enums/GameStateName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack, timer } from "../globals.js";
+import PlayState from "../states/PlayState.js";
 import ShowResultState from "../states/ShowResultState.js";
 import WagerState from "../states/WagerState.js";
 import Board from "./Board.js";
@@ -229,7 +230,6 @@ export default class DiceGame {
     }
 
     render() {
-        // Might be able to do the bulk of the render in here, with dice and popping ui elements.
         this.dice.forEach((die) => {
             die.render();
         });
@@ -260,6 +260,23 @@ export default class DiceGame {
                 `= ${this.rolledValue}`,
                 CANVAS_WIDTH / 2 + Die.SPRITE_WIDTH * displayDiceScale * 2 + 20,
                 displayDiceY + 50
+            );
+            context.restore();
+        }
+
+        if (this.isPlayerTurn && this.gamePhase === GamePhase.ToRoll && stateStack.top() instanceof PlayState) {
+            context.save();
+            context.font = '50px roboto';
+            context.fillStyle = 'white';
+            context.textAlign = 'center';
+            context.shadowColor = 'black';
+            context.shadowOffsetX = 2;
+            context.shadowOffsetY = 1;
+            context.shadowBlur = 4;
+            context.fillText(
+                "Press ENTER to Roll",
+                CANVAS_WIDTH / 2,
+                CANVAS_HEIGHT - 150
             );
             context.restore();
         }
