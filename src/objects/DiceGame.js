@@ -150,10 +150,6 @@ export default class DiceGame {
         // To be implemented by the particular games.
     }
 
-    checkVictory() {
-        // Not sure I'll be able to do anything here, might be only implemented in children.
-    }
-
     /**
      * Roll all the game dice and add up their values into rolledValue.
      */
@@ -172,8 +168,6 @@ export default class DiceGame {
             this.rolledValue += die.value;
         });
         this.isRolling = true;
-
-        // do something with the rolled value depending on the game.
     }
 
     /**
