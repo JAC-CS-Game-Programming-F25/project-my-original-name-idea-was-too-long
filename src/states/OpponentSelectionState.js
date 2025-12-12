@@ -217,13 +217,13 @@ export default class OpponentSelectionState extends State {
                 CANVAS_HEIGHT / 2 + 60
             );
             context.font = '40px manufacturingConsent';
-            if (!previousOpponent.isBroke()) {
+            if (!previousOpponent?.isBroke()) {
                 context.fillText(
-                    `Game: ${previousOpponent.game}`,
+                    `Game: ${previousOpponent?.game}`,
                     CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
                     CANVAS_HEIGHT / 2 + 110);
                 context.fillText(
-                    `Money: ${previousOpponent.money}`,
+                    `Money: ${previousOpponent?.money}`,
                     CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
                     CANVAS_HEIGHT / 2 + 160
                 );
