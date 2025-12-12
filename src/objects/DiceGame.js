@@ -4,8 +4,8 @@ import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
-import GameStateName from "../enums/GameStateName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack, timer } from "../globals.js";
+import GameOverState from "../states/GameOverState.js";
 import PlayState from "../states/PlayState.js";
 import ShowResultState from "../states/ShowResultState.js";
 import WagerState from "../states/WagerState.js";
@@ -123,20 +123,13 @@ export default class DiceGame {
             case GamePhase.PostGame:
                 if (this.player.isBroke()) {
                     // If the player has run out of money, they lose!
-                    stateStack.push(GameStateName.GameOver);
+                    stateStack.push(new GameOverState());
                 } else {
-                    // Go back to Opponent selection, (check there if any opponents still have money, if not: Victory State)
+                    // If the opponent is broke, go back to Opponent Selection.
+                    stateStack.pop();
                 }
                 break;
         }
-
-
-        // Misc testing stuff to remove.
-        // if (input.isKeyPressed(Input.KEYS.ENTER)) {
-        //     this.rollDice();
-        // } else if (input.isKeyPressed(Input.KEYS.BACKSLASH)) {
-        //     this.rollBattle();
-        // }
     }
 
     /**
