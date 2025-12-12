@@ -17,7 +17,7 @@ export default class UITextBox extends UIElement {
      * @param {number} y 
      * @param {number} width 
      * @param {number} height 
-     * @param {object} options Font size/colour/family, and text alignment.
+     * @param {object} options Font size/colour/family, line spacing, and text alignment.
      */
     constructor(text, x, y, width, height, options = {}) {
         super(x, y, width, height);
@@ -26,6 +26,7 @@ export default class UITextBox extends UIElement {
         this.fontColour = options.fontColour ?? UITextBox.COLOUR;
         this.fontFamily = options.fontFamily ?? UITextBox.FONT_FAMILY;
         this.textAlignment = options.textAlignment ?? UITextBox.TEXT_ALIGNMENT;
+        this.lineSpacing = options.lineSpacing ?? 0;
 
         this.lines = this.getLines(text, width);
     }
@@ -86,7 +87,7 @@ export default class UITextBox extends UIElement {
             context.fillText(
                 line,
                 this.position.x + offset,
-                this.position.y + index * this.fontSize
+                this.position.y + index * (this.fontSize + this.lineSpacing)
             );
         });
         context.restore();
