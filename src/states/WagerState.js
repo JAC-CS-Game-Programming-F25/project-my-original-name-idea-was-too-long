@@ -1,10 +1,13 @@
 import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
 import State from "../../lib/State.js";
+import Character from "../entities/Character.js";
+import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, stateStack, timer } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
 import UIElement from "../user-interface/UIElement.js";
+import HelpState from "./HelpState.js";
 
 export default class WagerState extends State {
     static TRANSITION_DURATION = 0.75;
@@ -16,16 +19,20 @@ export default class WagerState extends State {
      * the Opponent Selection State, in order to prevent cheating if they think they're about
      * to lose.
      * 
+     * @param {Character} player
+     * @param {Opponent} opponent  
      * @param {(wager: number) => void} setWager
      */
-    constructor(playerMoney, opponentMoney, setWager) {
+    constructor(player, opponent, setWager) {
         super();
 
-        this.playerMoney = playerMoney;
-        this.opponentMoney = opponentMoney;
+
+        this.playerMoney = player.money;
+        this.opponentMoney = opponent.money;
+        this.game = opponent.game;
 
         // Set the maximum possible wager so that no one can lose more money than they have.
-        this.maxWager = Math.min(playerMoney, opponentMoney);
+        this.maxWager = Math.min(this.playerMoney, this.opponentMoney);
         this.minWager = 1;
         // Set the current wager to the value of the most recently made wager, or to the max wager if it's too high.
         this.currentWager = Math.min(WagerState.lastWager, this.maxWager);
@@ -80,7 +87,8 @@ export default class WagerState extends State {
             // Accept wager.
             this.acceptWager();
         } else if (input.isKeyPressed(Input.KEYS.H)) {
-            // BRING UP HELP SCREEN
+            // Bring up Game instructions.
+            stateStack.push(new HelpState(this.game));
         } else if (input.isKeyPressed(Input.KEYS.ESCAPE)) {
             // Return to Opponent Selection.
             stateStack.pop();
