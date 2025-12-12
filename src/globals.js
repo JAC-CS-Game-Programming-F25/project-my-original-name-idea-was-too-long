@@ -5,6 +5,7 @@ import Timer from '../lib/Timer.js';
 import Input from '../lib/Input.js';
 import StateStack from '../lib/StateStack.js';
 import OpponentFactory from './services/OpponentFactory.js';
+import GameInstructionsFactory from './services/GameInstructionsFactory.js';
 
 export const canvas = document.createElement('canvas');
 export const context =
@@ -37,6 +38,7 @@ export const input = new Input(canvas);
 export const sounds = new Sounds();
 
 export const opponentFactory = new OpponentFactory();
+export const gameInstructionsFactory = new GameInstructionsFactory();
 
 /**
  * matter.js is the physics engine to be used for rolling dice collision.

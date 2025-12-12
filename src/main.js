@@ -20,6 +20,7 @@ import {
 	sounds,
 	stateStack,
 	opponentFactory,
+	gameInstructionsFactory,
 } from './globals.js';
 import TitleScreenState from './states/TitleScreenState.js';
 
@@ -38,12 +39,14 @@ const {
 	sounds: soundDefinitions,
 } = await fetch('./config/config.json').then((response) => response.json());
 const opponentDefinitions = await fetch('./config/opponents.json').then((response) => response.json());
+const gameInstructions = await fetch('./config/gameInstructions.json').then((response) => response.json());
 
 // Load all the assets from their definitions.
 images.load(imageDefinitions);
 fonts.load(fontDefinitions);
 sounds.load(soundDefinitions);
 opponentFactory.load(opponentDefinitions);
+gameInstructionsFactory.load(gameInstructions);
 
 // Set up the state stack.
 stateStack.push(new TitleScreenState());

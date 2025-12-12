@@ -9,6 +9,7 @@ import Direction from "../enums/Direction.js";
 import ImageName from "../enums/ImageName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, input, opponentFactory, stateStack } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
+import HelpState from "./HelpState.js";
 import PlayState from "./PlayState.js";
 
 export default class OpponentSelectionState extends State {
@@ -71,7 +72,8 @@ export default class OpponentSelectionState extends State {
             } else if (input.isKeyPressed(Input.KEYS.ENTER)) {
                 this.fadeToPlayState();
             } else if (input.isKeyPressed(Input.KEYS.H)) {
-                // BRING UP HELP SCREEN
+                // Bring up the instructions for the selected opponent's game.
+                stateStack.push(new HelpState(this.opponents[this.selectedOpponent].game));
             }
         }
 
@@ -111,6 +113,7 @@ export default class OpponentSelectionState extends State {
      */
     fadeToPlayState() {
         // Fade out the UI before pushing the next state.
+        this.isTransitioning = true;
         this.timer.tween(
             this.alpha,
             { a: 0 },
@@ -126,8 +129,8 @@ export default class OpponentSelectionState extends State {
                     this.alpha,
                     { a: 1 },
                     this.alpha.fadeDuration,
-                    Easing.linear
-                    // Might want another variable for locking the player from doing stuff until done.
+                    Easing.linear,
+                    () => { this.isTransitioning = false; }
                 );
             }
         );

@@ -65,7 +65,7 @@ export default class DiceGame {
 
             case GamePhase.Wager:
                 // Bring up wager state to get player's wager, and then proceed to the battle phase.
-                stateStack.push(new WagerState(this.player.money, this.opponent.money, (wager) => {
+                stateStack.push(new WagerState(this.player, this.opponent, (wager) => {
                     this.wagerAmount = wager;
                 }));
                 this.gamePhase = GamePhase.Battle
