@@ -31,6 +31,9 @@ export default class OpponentSelectionState extends State {
 
         // Whether the opponent selection carrousel is transitioning between opponents.
         this.isTransitioning = false;
+        // Whether the UI is fading in or out due to a transition between States.
+        this.isFading = false;
+
         // The rendering offset for when transitioning between opponents.
         this.transitionOffset = 0;
         this.transitionDuration = 0.5;
@@ -64,7 +67,7 @@ export default class OpponentSelectionState extends State {
     }
 
     update(dt) {
-        if (!this.isTransitioning) {
+        if (!this.isTransitioning && !this.isFading) {
             if (input.isKeyPressed(Input.KEYS.A) || input.isKeyPressed(Input.KEYS.ARROW_LEFT)) {
                 this.switchOpponent(-1);
             } else if (input.isKeyPressed(Input.KEYS.D) || input.isKeyPressed(Input.KEYS.ARROW_RIGHT)) {
@@ -113,7 +116,7 @@ export default class OpponentSelectionState extends State {
      */
     fadeToPlayState() {
         // Fade out the UI before pushing the next state.
-        this.isTransitioning = true;
+        this.isFading = true;
         this.timer.tween(
             this.alpha,
             { a: 0 },
@@ -130,7 +133,7 @@ export default class OpponentSelectionState extends State {
                     { a: 1 },
                     this.alpha.fadeDuration,
                     Easing.linear,
-                    () => { this.isTransitioning = false; }
+                    () => { this.isFading = false; }
                 );
             }
         );
@@ -179,7 +182,7 @@ export default class OpponentSelectionState extends State {
             // Get the additional offset for the previous opponent to be rendered relative to the current opponent.
             const distanceFromCurrentOpponent = this.transitionOffset > 0 ? this.rightTransitionOffsetStart : this.leftTransitionOffsetStart;
 
-            previousOpponent.portrait.render(
+            previousOpponent?.portrait.render(
                 CANVAS_WIDTH / 2 - Opponent.OPPONENT_PORTRAITS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
                 CANVAS_HEIGHT / 2 - Opponent.OPPONENT_PORTRAITS_HEIGHT
             );
