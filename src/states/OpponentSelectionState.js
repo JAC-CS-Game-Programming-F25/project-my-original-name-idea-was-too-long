@@ -11,6 +11,7 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, input, opponentFactory, s
 import UIArrow from "../user-interface/UIArrow.js";
 import HelpState from "./HelpState.js";
 import PlayState from "./PlayState.js";
+import VictoryState from "./VictoryState.js";
 
 export default class OpponentSelectionState extends State {
     static BACKGROUND_WIDTH = 321;
@@ -67,6 +68,11 @@ export default class OpponentSelectionState extends State {
     }
 
     update(dt) {
+        // Check for victory when the Opponent state is fading in (i.e. after coming back from a game).
+        if (this.isFading) {
+            this.checkVictory();
+        }
+
         if (!this.isTransitioning && !this.isFading) {
             if (input.isKeyPressed(Input.KEYS.A) || input.isKeyPressed(Input.KEYS.ARROW_LEFT)) {
                 this.switchOpponent(-1);
@@ -115,6 +121,11 @@ export default class OpponentSelectionState extends State {
      * Once the PlayState is popped, the UI will fade back in.
      */
     fadeToPlayState() {
+        if (this.opponents[this.selectedOpponent].isBroke()) {
+            // play a little "error" sound.
+            return;
+        }
+
         // Fade out the UI before pushing the next state.
         this.isFading = true;
         this.timer.tween(
@@ -127,6 +138,7 @@ export default class OpponentSelectionState extends State {
                     this.player,
                     this.opponents[this.selectedOpponent]
                 ));
+
                 // Once the PlayState is popped from the stack, the Opponent Selection UI should fade back in.
                 this.timer.tween(
                     this.alpha,
@@ -137,6 +149,14 @@ export default class OpponentSelectionState extends State {
                 );
             }
         );
+    }
+
+    checkVictory() {
+        for (const opponent of this.opponents) {
+            if (!opponent.isBroke()) return;
+        }
+        // If all of the opponents are broke, the player wins.
+        stateStack.push(new VictoryState());
     }
 
     //#region Render methods
@@ -170,8 +190,12 @@ export default class OpponentSelectionState extends State {
         context.font = '60px manufacturingConsent';
         context.fillText(currentOpponent.name, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 60);
         context.font = '40px manufacturingConsent';
-        context.fillText(`Game: ${currentOpponent.game}`, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 110);
-        context.fillText(`Money: ${currentOpponent.money}`, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 160);
+        if (!currentOpponent.isBroke()) {
+            context.fillText(`Game: ${currentOpponent.game}`, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 110);
+            context.fillText(`Money: ${currentOpponent.money}`, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 160);
+        } else {
+            context.fillText("Broke!", CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 110);
+        }
 
         // If there is a transition happening between selected opponents, the "current" opponent will be the one
         // coming in from off screen and the previous opponent needs to tween off in the opposite direction.
@@ -188,20 +212,28 @@ export default class OpponentSelectionState extends State {
             );
             context.font = '60px manufacturingConsent';
             context.fillText(
-                currentOpponent.name,
+                previousOpponent?.name,
                 CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
                 CANVAS_HEIGHT / 2 + 60
             );
             context.font = '40px manufacturingConsent';
-            context.fillText(
-                `Game: ${currentOpponent.game}`,
-                CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
-                CANVAS_HEIGHT / 2 + 110);
-            context.fillText(
-                `Money: ${currentOpponent.money}`,
-                CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
-                CANVAS_HEIGHT / 2 + 160
-            );
+            if (!previousOpponent?.isBroke()) {
+                context.fillText(
+                    `Game: ${previousOpponent?.game}`,
+                    CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
+                    CANVAS_HEIGHT / 2 + 110);
+                context.fillText(
+                    `Money: ${previousOpponent?.money}`,
+                    CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
+                    CANVAS_HEIGHT / 2 + 160
+                );
+            } else {
+                context.fillText(
+                    "Broke!",
+                    CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
+                    CANVAS_HEIGHT / 2 + 110
+                );
+            }
         }
     }
 
