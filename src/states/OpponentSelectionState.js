@@ -172,11 +172,13 @@ export default class OpponentSelectionState extends State {
 
     renderBackground() {
         const scaleFactor = 5;
+        context.imageSmoothingEnabled = false;
         this.background.render(
             CANVAS_WIDTH / 2 - OpponentSelectionState.BACKGROUND_WIDTH * scaleFactor / 2,
             CANVAS_HEIGHT / 2 - OpponentSelectionState.BACKGROUND_HEIGHT * scaleFactor / 2,
             { x: scaleFactor, y: scaleFactor }
         );
+        context.imageSmoothingEnabled = true;
     }
 
     renderOpponent() {

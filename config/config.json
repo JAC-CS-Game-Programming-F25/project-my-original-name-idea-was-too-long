@@ -29,6 +29,12 @@
 			"path": "./assets/images/parchment.png",
 			"width": 321,
 			"height": 207
+		},
+		{
+			"name": "backdrop",
+			"path": "./assets/images/backdrop.png",
+			"width": 480,
+			"height": 270
 		}
 	],
 	"fonts": [
