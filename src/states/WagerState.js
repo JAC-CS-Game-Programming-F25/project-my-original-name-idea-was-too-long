@@ -4,7 +4,8 @@ import State from "../../lib/State.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, stateStack, timer } from "../globals.js";
+import SoundName from "../enums/SoundName.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, sounds, stateStack, timer } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
 import UIElement from "../user-interface/UIElement.js";
 import HelpState from "./HelpState.js";
@@ -66,7 +67,7 @@ export default class WagerState extends State {
             Easing.linear,
             () => { this.isTransitioning = false }
         );
-        // make the transition noise.
+        sounds.play(SoundName.Stone);
     }
 
     update(dt) {
@@ -108,7 +109,7 @@ export default class WagerState extends State {
         }
 
         this.currentWager += amount;
-        // Make a little gold shuffling noise.
+        sounds.play(SoundName.Coin);
     }
 
     acceptWager() {

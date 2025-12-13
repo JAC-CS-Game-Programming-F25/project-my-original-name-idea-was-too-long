@@ -48,6 +48,35 @@
 		}
 	],
 	"sounds": [
-		
+		{
+			"name": "goldSack",
+			"path": "./assets/sounds/gold_sack.wav",
+			"size": 1,
+			"volume": 1
+		},
+		{
+			"name": "coin",
+			"path": "./assets/sounds/hjm-coin_clicker_2.wav",
+			"size": 20,
+			"volume": 0.5
+		}, 
+		{
+			"name": "stone",
+			"path": "./assets/sounds/stone_door.wav",
+			"size": 2,
+			"volume": 0.75
+		}, 
+		{
+			"name": "dice",
+			"path": "./assets/sounds/dice_05.wav",
+			"size": 1,
+			"volume": 1
+		}, 
+		{
+			"name": "table",
+			"path": "./assets/sounds/chair-stool-wooden-dragged-08.wav",
+			"size": 1,
+			"volume": 0.5
+		}
 	]
 }

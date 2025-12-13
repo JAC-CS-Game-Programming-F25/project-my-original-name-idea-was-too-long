@@ -1,11 +1,17 @@
 /**
  * Game Name
+ * Dedos de Toledo
  *
  * Authors
- *
+ * Adam Laurin
+ * 
  * Brief description
  *
  * Asset sources
+ * gold_sack.wav by Amarikah https://opengameart.org/content/sack-of-gold
+ * hjm-coin_clicker_2.wav by Varkalandar https://opengameart.org/content/coin-sounds-0
+ * dice_05.wav by dermotte https://freesound.org/people/dermotte/sounds/220745/
+ * chair-stool-wooden-dragged-08.wav by BWOBoyle https://freesound.org/people/DWOBoyle/sounds/146998/
  */
 
 import Game from '../lib/Game.js';

@@ -1,7 +1,8 @@
 import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
 import State from "../../lib/State.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, gameInstructionsFactory, input, stateStack, timer } from "../globals.js";
+import SoundName from "../enums/SoundName.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, gameInstructionsFactory, input, sounds, stateStack, timer } from "../globals.js";
 import UIElement from "../user-interface/UIElement.js";
 import UITextBox from "../user-interface/UITextBox.js";
 
@@ -48,7 +49,7 @@ export default class HelpState extends State {
             Easing.linear,
             () => { this.isTransitioning = false; }
         );
-        // make the transition noise.
+        sounds.play(SoundName.Stone);
     }
 
     update(dt) {
@@ -74,6 +75,7 @@ export default class HelpState extends State {
             () => { stateStack.pop(); }
         );
         // make the transition noise.
+        sounds.play(SoundName.Stone);
     }
 
     render() {

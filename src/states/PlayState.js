@@ -2,12 +2,13 @@ import State from "../../lib/State.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import DiceGameFactory from "../services/DiceGameFactory.js";
-import { CANVAS_WIDTH, context, engine, input, matter, stateStack, timer, world } from "../globals.js";
+import { CANVAS_WIDTH, context, engine, input, matter, sounds, stateStack, timer, world } from "../globals.js";
 import Board from "../objects/Board.js";
 import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
 import GamePhase from "../enums/GamePhase.js";
 import HelpState from "./HelpState.js";
+import SoundName from "../enums/SoundName.js";
 
 const { Composite, Engine } = matter;
 
@@ -42,6 +43,7 @@ export default class PlayState extends State {
 			Easing.linear,
 			() => { this.isStartupTransition = false }
 		);
+		sounds.play(SoundName.Table);
 	}
 
 	exit() {
