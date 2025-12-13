@@ -52,7 +52,7 @@ export default class GameOverState extends State {
 		// Once the Game Over message is visible, let the player go back to the title screen by hitting ENTER.
 		if (this.gameOverMessageAlpha === 1 && input.isKeyPressed(Input.KEYS.ENTER)) {
 			stateStack.clear();
-			stateStack.push(new TitleScreenState);
+			stateStack.push(new TitleScreenState());
 		}
 	}
 

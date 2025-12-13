@@ -1,4 +1,3 @@
-import Sprite from "../../lib/Sprite.js";
 import State from "../../lib/State.js";
 import ImageName from "../enums/ImageName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, stateStack } from "../globals.js";
