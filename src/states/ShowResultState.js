@@ -4,7 +4,7 @@ import State from "../../lib/State.js";
 import Timer from "../../lib/Timer.js";
 import ImageName from "../enums/ImageName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, images, stateStack } from "../globals.js";
-import UIBackground from "../user-interface/UIBackground.js";
+import UISprite from "../user-interface/UISprite.js";
 import UITextBox from "../user-interface/UITextBox.js";
 
 export default class ShowResultState extends State {
@@ -30,7 +30,7 @@ export default class ShowResultState extends State {
         const fontSize = options.fontSize ?? ShowResultState.FONT_SIZE;
         this.holdDuration = options.holdDuration ?? ShowResultState.HOLD_DURATION;
 
-        this.background = new UIBackground(
+        this.background = new UISprite(
             new Sprite(
                 images.get(ImageName.StonePanel2),
                 ShowResultState.PANEL_SPRITE_VALUES.x,

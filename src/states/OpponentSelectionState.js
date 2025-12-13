@@ -9,6 +9,7 @@ import Direction from "../enums/Direction.js";
 import ImageName from "../enums/ImageName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, input, opponentFactory, stateStack } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
+import UISprite from "../user-interface/UISprite.js";
 import HelpState from "./HelpState.js";
 import PlayState from "./PlayState.js";
 import VictoryState from "./VictoryState.js";
@@ -16,6 +17,8 @@ import VictoryState from "./VictoryState.js";
 export default class OpponentSelectionState extends State {
     static BACKGROUND_WIDTH = 321;
     static BACKGROUND_HEIGHT = 207;
+
+    static COIN_SPRITE_VALUES = { x: 49, y: 32, width: 15, height: 16, scale: { x: 3, y: 3 } };
 
     /**
      * In this state, the player can cycle through possible opponents 
@@ -42,7 +45,7 @@ export default class OpponentSelectionState extends State {
         this.rightTransitionOffsetStart = CANVAS_WIDTH / 2 + Opponent.OPPONENT_PORTRAITS_WIDTH;
         this.leftTransitionOffsetStart = -(CANVAS_WIDTH / 2) - Opponent.OPPONENT_PORTRAITS_WIDTH;
 
-        // Define the arrow ui elements.
+        // Define the ui elements.
         const arrowPadding = 240;
         this.leftArrow = new UIArrow(
             arrowPadding,
@@ -54,13 +57,30 @@ export default class OpponentSelectionState extends State {
             CANVAS_HEIGHT / 2 - UIArrow.SPRITE_MEASUREMENTS_RIGHT.height / 2,
             Direction.Right
         );
-        // Define the background image.
-        this.background = new Sprite(
-            images.get(ImageName.Parchment),
+        this.coinPouchSprite = new UISprite(
+            new Sprite(
+                images.get(ImageName.Money),
+                OpponentSelectionState.COIN_SPRITE_VALUES.x,
+                OpponentSelectionState.COIN_SPRITE_VALUES.y,
+                OpponentSelectionState.COIN_SPRITE_VALUES.width,
+                OpponentSelectionState.COIN_SPRITE_VALUES.height
+            ),
             0, 0,
-            OpponentSelectionState.BACKGROUND_WIDTH,
-            OpponentSelectionState.BACKGROUND_HEIGHT
+            OpponentSelectionState.COIN_SPRITE_VALUES.scale
         );
+        // Define the background image.
+        const backgroundScaleFactor = 5;
+        this.background = new UISprite(
+            new Sprite(
+                images.get(ImageName.Parchment),
+                0, 0,
+                OpponentSelectionState.BACKGROUND_WIDTH,
+                OpponentSelectionState.BACKGROUND_HEIGHT
+            ),
+            CANVAS_WIDTH / 2 - OpponentSelectionState.BACKGROUND_WIDTH * backgroundScaleFactor / 2,
+            CANVAS_HEIGHT / 2 - OpponentSelectionState.BACKGROUND_HEIGHT * backgroundScaleFactor / 2,
+            { x: backgroundScaleFactor, y: backgroundScaleFactor }
+        )
         // The alpha value for when rendering the UI.
         this.alpha = { a: 1, fadeDuration: 1 };
 
@@ -164,21 +184,10 @@ export default class OpponentSelectionState extends State {
     render() {
         context.save();
         context.globalAlpha = this.alpha.a;
-        this.renderBackground();
+        this.background.render();
         this.renderOpponent();
         this.renderUI();
         context.restore();
-    }
-
-    renderBackground() {
-        const scaleFactor = 5;
-        context.imageSmoothingEnabled = false;
-        this.background.render(
-            CANVAS_WIDTH / 2 - OpponentSelectionState.BACKGROUND_WIDTH * scaleFactor / 2,
-            CANVAS_HEIGHT / 2 - OpponentSelectionState.BACKGROUND_HEIGHT * scaleFactor / 2,
-            { x: scaleFactor, y: scaleFactor }
-        );
-        context.imageSmoothingEnabled = true;
     }
 
     renderOpponent() {
@@ -190,6 +199,7 @@ export default class OpponentSelectionState extends State {
         );
         context.textAlign = 'center';
         context.font = '60px manufacturingConsent';
+        context.fillStyle = 'black';
         context.fillText(currentOpponent.name, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 60);
         context.font = '40px manufacturingConsent';
         if (!currentOpponent.isBroke()) {
@@ -240,12 +250,15 @@ export default class OpponentSelectionState extends State {
     }
 
     renderUI() {
-        context.font = '30px roboto';
+        context.fillStyle = 'white';
+        context.font = '45px manufacturingConsent';
         context.textAlign = 'left';
         context.fillText(`Your Money:`, 30, 60);
         context.textAlign = 'right';
-        context.fillText(`${this.player.money}`, 195, 100);
+        context.fillText(`${this.player.money}`, 195, 110);
+        this.coinPouchSprite.render(50, 70);
 
+        context.fillStyle = 'black';
         context.font = '60px manufacturingConsent';
         const letterOffset = { x: 47, y: 65 };
         this.leftArrow.render();
@@ -266,13 +279,13 @@ export default class OpponentSelectionState extends State {
         if (!this.isTransitioning) {
             context.font = '60px roboto';
             context.textAlign = 'center';
-            context.fillText("Press ENTER to Challenge", CANVAS_WIDTH / 2, 110);
+            context.fillText("Press ENTER to Challenge", CANVAS_WIDTH / 2, CANVAS_HEIGHT - 215);
 
             context.font = '45px roboto';
             context.fillText(
                 `Press 'H' to See the Rules of ${this.opponents[this.selectedOpponent].game}`,
                 CANVAS_WIDTH / 2,
-                CANVAS_HEIGHT - 100
+                CANVAS_HEIGHT - 140
             );
         }
     }

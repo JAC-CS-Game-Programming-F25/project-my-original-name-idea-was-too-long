@@ -275,8 +275,5 @@ export default class DiceGame {
             );
             context.restore();
         }
-
-        // Temp display phase
-        context.fillText(`${this.gamePhase}`, CANVAS_WIDTH - 200, CANVAS_HEIGHT - 200)
     }
 }

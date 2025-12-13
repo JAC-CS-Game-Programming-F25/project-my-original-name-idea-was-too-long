@@ -7,10 +7,9 @@ import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import ImageName from "../enums/ImageName.js";
 import SoundName from "../enums/SoundName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, input, sounds, stateStack, timer } from "../globals.js";
+import { context, images, input, sounds, stateStack, timer } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
-import UIBackground from "../user-interface/UIBackground.js";
-import UIElement from "../user-interface/UIElement.js";
+import UISprite from "../user-interface/UISprite.js";
 import HelpState from "./HelpState.js";
 
 export default class WagerState extends State {
@@ -48,7 +47,7 @@ export default class WagerState extends State {
         this.isTransitioning = true;
 
         // Define the UI elements.
-        this.background = new UIBackground(
+        this.background = new UISprite(
             new Sprite(
                 images.get(ImageName.StonePanel),
                 WagerState.BACKGROUND_SPRITE_VALUES.x,

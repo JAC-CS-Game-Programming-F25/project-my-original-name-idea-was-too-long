@@ -103,7 +103,7 @@ export default class Riffa extends DiceGame {
         context.save();
         const textX = 40;
         const textY = CANVAS_HEIGHT - CANVAS_HEIGHT / 3;
-        context.fillStyle = 'black';
+        context.fillStyle = 'white';
         context.textAlign = 'left';
         context.font = '50px manufacturingConsent';
         context.fillText(`Your Score:`, textX, textY);

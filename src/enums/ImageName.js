@@ -6,7 +6,8 @@ const ImageName = {
     Parchment: "parchment",
     Backdrop: "backdrop",
     StonePanel: "stonePanel",
-    StonePanel2: "stonePanel2"
+    StonePanel2: "stonePanel2",
+    Money: "money"
 };
 
 export default ImageName;

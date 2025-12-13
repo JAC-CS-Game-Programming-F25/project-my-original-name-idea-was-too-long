@@ -8,6 +8,12 @@
  * Brief description
  *
  * Asset sources
+ * 
+ * images:
+ * controls-stone.png by p0ss https://opengameart.org/content/user-interface-element-pack-panels-buttons-sliders-tables-icons
+ * treasure_icons.png by Bonsaiheldin https://opengameart.org/content/shiny-treasure-icons-16x16
+ * 
+ * sound:
  * gold_sack.wav by Amarikah https://opengameart.org/content/sack-of-gold
  * hjm-coin_clicker_2.wav by Varkalandar https://opengameart.org/content/coin-sounds-0
  * dice_05.wav by dermotte https://freesound.org/people/dermotte/sounds/220745/

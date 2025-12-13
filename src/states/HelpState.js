@@ -1,12 +1,11 @@
 import Easing from "../../lib/Easing.js";
-import Graphic from "../../lib/Graphic.js";
 import Input from "../../lib/Input.js";
 import Sprite from "../../lib/Sprite.js";
 import State from "../../lib/State.js";
 import ImageName from "../enums/ImageName.js";
 import SoundName from "../enums/SoundName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, gameInstructionsFactory, images, input, sounds, stateStack, timer } from "../globals.js";
-import UIBackground from "../user-interface/UIBackground.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, gameInstructionsFactory, images, input, sounds, stateStack, timer } from "../globals.js";
+import UISprite from "../user-interface/UISprite.js";
 import UITextBox from "../user-interface/UITextBox.js";
 
 export default class HelpState extends State {
@@ -28,7 +27,7 @@ export default class HelpState extends State {
         this.isTransitioning = true;
 
         // Define the UI elements.
-        this.background = new UIBackground(
+        this.background = new UISprite(
             new Sprite(
                 images.get(ImageName.StonePanel),
                 0, 0,
