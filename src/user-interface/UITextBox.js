@@ -17,7 +17,7 @@ export default class UITextBox extends UIElement {
      * @param {number} y 
      * @param {number} width 
      * @param {number} height 
-     * @param {object} options Font size/colour/family, line spacing, and text alignment.
+     * @param {object} options Font size/colour/family, line spacing, top padding, text alignment and shadow.
      */
     constructor(text, x, y, width, height, options = {}) {
         super(x, y, width, height);
@@ -27,6 +27,7 @@ export default class UITextBox extends UIElement {
         this.fontFamily = options.fontFamily ?? UITextBox.FONT_FAMILY;
         this.textAlignment = options.textAlignment ?? UITextBox.TEXT_ALIGNMENT;
         this.lineSpacing = options.lineSpacing ?? 0;
+        this.textShadow = options.textShadow ?? false;
 
         this.lines = this.getLines(text, width);
     }
@@ -74,6 +75,12 @@ export default class UITextBox extends UIElement {
         context.font = `${this.fontSize}px ${this.fontFamily}`;
         context.fillStyle = this.fontColour;
         context.textAlign = this.textAlignment;
+        if (this.textShadow) {
+            context.shadowColor = 'black';
+            context.shadowOffsetX = 2;
+            context.shadowOffsetY = 1;
+            context.shadowBlur = 4;
+        }
 
         // If the text alignment is something other than left, adjust the offset so the text renders in the right spot.
         let offset = 0;

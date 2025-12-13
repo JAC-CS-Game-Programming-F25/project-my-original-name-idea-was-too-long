@@ -35,6 +35,18 @@
 			"path": "./assets/images/backdrop.png",
 			"width": 480,
 			"height": 270
+		},
+		{
+			"name": "stonePanel",
+			"path": "./assets/images/stone-panel.png",
+			"width": 270,
+			"height": 270
+		},
+		{
+			"name": "stonePanel2",
+			"path": "./assets/images/stone-panel_2.png",
+			"width": 270,
+			"height": 112
 		}
 	],
 	"fonts": [
@@ -76,7 +88,7 @@
 			"name": "table",
 			"path": "./assets/sounds/chair-stool-wooden-dragged-08.wav",
 			"size": 1,
-			"volume": 0.5
+			"volume": 0.35
 		}
 	]
 }

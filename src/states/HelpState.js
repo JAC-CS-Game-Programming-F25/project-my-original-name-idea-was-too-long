@@ -1,14 +1,19 @@
 import Easing from "../../lib/Easing.js";
+import Graphic from "../../lib/Graphic.js";
 import Input from "../../lib/Input.js";
+import Sprite from "../../lib/Sprite.js";
 import State from "../../lib/State.js";
+import ImageName from "../enums/ImageName.js";
 import SoundName from "../enums/SoundName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, gameInstructionsFactory, input, sounds, stateStack, timer } from "../globals.js";
-import UIElement from "../user-interface/UIElement.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, gameInstructionsFactory, images, input, sounds, stateStack, timer } from "../globals.js";
+import UIBackground from "../user-interface/UIBackground.js";
 import UITextBox from "../user-interface/UITextBox.js";
 
 export default class HelpState extends State {
     static TRANSITION_DURATION = 0.75;
     static TEXT_PADDING = 50;
+    static BACKGROUND_SPRITE_DIMENSIONS = { x: 270, y: 270 }
+    static BACKGROUND_SCALE = 4;
 
     /**
      * This state brings up a panel which shows the instructions on how to play a
@@ -23,20 +28,31 @@ export default class HelpState extends State {
         this.isTransitioning = true;
 
         // Define the UI elements.
-        this.background = new UIElement(CANVAS_WIDTH, 0, CANVAS_WIDTH / 2, CANVAS_HEIGHT);
-        this.background.alpha = 1;
+        this.background = new UIBackground(
+            new Sprite(
+                images.get(ImageName.StonePanel),
+                0, 0,
+                HelpState.BACKGROUND_SPRITE_DIMENSIONS.x,
+                HelpState.BACKGROUND_SPRITE_DIMENSIONS.y
+            ),
+            CANVAS_WIDTH,
+            0,
+            { x: HelpState.BACKGROUND_SCALE, y: HelpState.BACKGROUND_SCALE }
+        );
 
         this.text = new UITextBox(
             gameInstructionsFactory.get(game),
-            this.background.x + HelpState.TEXT_PADDING,
+            this.background.position.x + HelpState.TEXT_PADDING,
             HelpState.TEXT_PADDING,
-            this.background.dimensions.x - HelpState.TEXT_PADDING * 2,
-            this.background.dimensions.y - HelpState.TEXT_PADDING * 2,
+            CANVAS_WIDTH / 2 - HelpState.TEXT_PADDING * 2,
+            CANVAS_HEIGHT - HelpState.TEXT_PADDING * 2,
             {
                 fontFamily: "roboto",
                 fontSize: 30,
                 textAlignment: "left",
-                lineSpacing: 10
+                lineSpacing: 10,
+                fontColour: "white",
+                textShadow: true
             }
         );
     }
@@ -44,7 +60,7 @@ export default class HelpState extends State {
     enter() {
         timer.tween(
             this.background.position,
-            { x: CANVAS_WIDTH - this.background.dimensions.x },
+            { x: CANVAS_WIDTH / 2 },
             HelpState.TRANSITION_DURATION,
             Easing.linear,
             () => { this.isTransitioning = false; }
@@ -79,16 +95,7 @@ export default class HelpState extends State {
     }
 
     render() {
-        context.save();
-        context.globalAlpha = this.background.alpha;
-        context.fillStyle = 'white';
-        context.fillRect(
-            this.background.position.x,
-            this.background.position.y,
-            this.background.dimensions.x,
-            this.background.dimensions.y
-        );
-        context.restore();
+        this.background.render();
 
         this.text.render();
     }

@@ -4,7 +4,9 @@ const ImageName = {
     Dice: "dice",
     Board: "board",
     Parchment: "parchment",
-    Backdrop: "backdrop"
+    Backdrop: "backdrop",
+    StonePanel: "stonePanel",
+    StonePanel2: "stonePanel2"
 };
 
 export default ImageName;
