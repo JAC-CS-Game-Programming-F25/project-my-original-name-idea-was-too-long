@@ -99,6 +99,7 @@ export default class OpponentSelectionState extends State {
             this.loadData();
         } else {
             this.saveData();
+            localStorage.removeItem("game");
         }
 
         // Fade in the UI.

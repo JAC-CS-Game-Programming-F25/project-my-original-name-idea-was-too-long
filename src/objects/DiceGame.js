@@ -2,6 +2,7 @@ import Input from "../../lib/Input.js";
 import { getRandomPositiveNumber } from "../../lib/Random.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
+import DieStateName from "../enums/DieStateName.js";
 import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
 import SoundName from "../enums/SoundName.js";
@@ -253,6 +254,7 @@ export default class DiceGame {
         // Update the properties of the dice.
         this.dice.forEach((die, index) => {
             die.value = gameData.dice[index].value;
+            die.stateMachine.change(DieStateName.Idle);
             matter.Body.setPosition(
                 die.body,
                 gameData.dice[index].position
