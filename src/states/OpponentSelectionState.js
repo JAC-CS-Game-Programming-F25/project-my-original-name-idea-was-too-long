@@ -23,6 +23,9 @@ export default class OpponentSelectionState extends State {
     /**
      * In this state, the player can cycle through possible opponents 
      * and select which one they want to challenge.
+     * Each opponent has a game they wish to play and a certain amount of money.
+     * Once the opponent is out of money, they can no longer play. When all of
+     * the opponents are broke, the player wins.
      */
     constructor() {
         super();

@@ -6,6 +6,10 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, sounds, stateStack, timer 
 import TitleScreenState from "./TitleScreenState.js";
 
 export default class GameOverState extends State {
+	/**
+	 * This is the state that appears when the player looses all of their money.
+	 * Once the transition is done, they can press enter to return to the Title Screen.
+	 */
 	constructor() {
 		super();
 

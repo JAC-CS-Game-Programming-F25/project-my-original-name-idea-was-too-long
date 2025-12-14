@@ -5,6 +5,11 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, stateStack, timer } from "
 import TitleScreenState from "./TitleScreenState.js";
 
 export default class VictoryState extends State {
+	/**
+	 * The state which appears when the player has beaten all of their possible opponents.
+	 * Once the Victory message has faded in, the player can press enter to return to the
+	 * title screen.
+	 */
 	constructor() {
 		super();
 

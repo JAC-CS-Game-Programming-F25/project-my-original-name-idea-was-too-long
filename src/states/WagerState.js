@@ -74,6 +74,7 @@ export default class WagerState extends State {
     }
 
     enter() {
+        // Slide in the UI.
         timer.tween(
             this.background.position,
             { x: 0 },
