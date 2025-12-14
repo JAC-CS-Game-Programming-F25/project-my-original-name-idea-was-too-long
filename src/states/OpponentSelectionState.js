@@ -40,7 +40,7 @@ export default class OpponentSelectionState extends State {
         // Whether the opponent selection carrousel is transitioning between opponents.
         this.isTransitioning = false;
         // Whether the UI is fading in or out due to a transition between States.
-        this.isFading = false;
+        this.isFading = true;
 
         // The rendering offset for when transitioning between opponents.
         this.transitionOffset = 0;
@@ -86,17 +86,46 @@ export default class OpponentSelectionState extends State {
             { x: backgroundScaleFactor, y: backgroundScaleFactor }
         )
         // The alpha value for when rendering the UI.
-        this.alpha = { a: 1, fadeDuration: 1 };
+        this.alpha = { a: 0, fadeDuration: 1 };
 
         this.timer = new Timer();
     }
 
-    update(dt) {
-        // Check for victory when the Opponent state is fading in (i.e. after coming back from a game).
-        if (this.isFading) {
-            this.checkVictory();
+    /**
+     * @param {boolean} isNewGame If true, start a new game from scratch. If false, load data from local storage.
+     */
+    enter(isNewGame) {
+        if (!isNewGame) {
+            this.loadData();
+        } else {
+            this.saveData();
         }
 
+        // Fade in the UI.
+        this.timer.tween(
+            this.alpha,
+            { a: 1 },
+            this.alpha.fadeDuration,
+            Easing.linear,
+            () => { this.isFading = false; }
+        );
+    }
+
+    reEnter() {
+        this.checkVictory();
+        this.saveData();
+
+        // Bring back the UI on re-entry.
+        this.timer.tween(
+            this.alpha,
+            { a: 1 },
+            this.alpha.fadeDuration,
+            Easing.linear,
+            () => { this.isFading = false; }
+        );
+    }
+
+    update(dt) {
         if (!this.isTransitioning && !this.isFading) {
             if (input.isKeyPressed(Input.KEYS.A) || input.isKeyPressed(Input.KEYS.ARROW_LEFT)) {
                 this.switchOpponent(-1);
@@ -158,19 +187,11 @@ export default class OpponentSelectionState extends State {
             this.alpha.fadeDuration,
             Easing.linear,
             () => {
+                this.saveData();
                 stateStack.push(new PlayState(
                     this.player,
                     this.opponents[this.selectedOpponent]
                 ));
-
-                // Once the PlayState is popped from the stack, the Opponent Selection UI should fade back in.
-                this.timer.tween(
-                    this.alpha,
-                    { a: 1 },
-                    this.alpha.fadeDuration,
-                    Easing.linear,
-                    () => { this.isFading = false; }
-                );
             }
         );
     }
@@ -181,6 +202,42 @@ export default class OpponentSelectionState extends State {
         }
         // If all of the opponents are broke, the player wins.
         stateStack.push(new VictoryState());
+    }
+
+    saveData() {
+        localStorage.setItem("opponents", JSON.stringify(this.opponents));
+        localStorage.setItem("selectedOpponent", JSON.stringify(this.selectedOpponent));
+        localStorage.setItem("player", JSON.stringify(this.player));
+    }
+
+    loadData() {
+        // Load the Player.
+        const player = JSON.parse(localStorage.getItem("player"));
+        if (player) {
+            this.player = new Character(player.money);
+        }
+
+        // Load the Opponents.
+        const opponents = JSON.parse(localStorage.getItem("opponents"));
+        if (opponents) {
+            opponentFactory.loadFromSaveData(opponents);
+            this.opponents = opponentFactory.get();
+        }
+        const selectedOpponent = JSON.parse(localStorage.getItem("selectedOpponent"));
+        if (selectedOpponent) {
+            this.selectedOpponent = selectedOpponent;
+        }
+
+        // If a game was in progress, load additional data and enter the Play State.
+        const game = JSON.parse(localStorage.getItem("game") ?? "null");
+        if (game) {
+            this.player.money = game.player.money;
+            this.opponents[this.selectedOpponent].money = game.opponent.money;
+
+            const playState = new PlayState(this.player, this.opponents[this.selectedOpponent]);
+            playState.game.loadData(game);
+            stateStack.push(playState);
+        }
     }
 
     //#region Render methods

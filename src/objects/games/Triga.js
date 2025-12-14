@@ -96,6 +96,13 @@ export default class Triga extends DiceGame {
         return this.dice[0].value === this.dice[1].value && this.dice[0].value === this.dice[2].value;
     }
 
+    loadData(gameData) {
+        super.loadData(gameData);
+
+        this.playerMark = gameData.playerMark;
+        this.opponentMark = gameData.opponentMark;
+    }
+
     render() {
         super.render();
 

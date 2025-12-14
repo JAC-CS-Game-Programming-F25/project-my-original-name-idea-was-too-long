@@ -34,6 +34,28 @@ export default class OpponentFactory {
     }
 
     /**
+     * Load opponent data from a saved game.
+     * @param {object} saveData The opponents data retrieved from local storage.
+     */
+    loadFromSaveData(saveData) {
+        this.opponents = [];
+        saveData.forEach((opponentData) => {
+            this.opponents.push(
+                new Opponent(
+                    {
+                        name: opponentData.name,
+                        fullName: opponentData.fullName,
+                        greetings: opponentData.greetings,
+                        portraitDefinition: { x: opponentData.portrait.x, y: opponentData.portrait.y }
+                    },
+                    opponentData.game,
+                    opponentData.money
+                )
+            );
+        });
+    }
+
+    /**
      * @returns {Opponent[]} an array of all the opponents.
      */
     get() {

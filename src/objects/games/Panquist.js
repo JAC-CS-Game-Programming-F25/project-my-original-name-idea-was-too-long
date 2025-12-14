@@ -126,6 +126,13 @@ export default class Panquist extends DiceGame {
         this.wagerAmount = fullWager;
     }
 
+    loadData(gameData) {
+        super.loadData(gameData);
+
+        this.playerMark = gameData.playerMark;
+        this.opponentMark = gameData.opponentMark;
+    }
+
     render() {
         super.render();
 

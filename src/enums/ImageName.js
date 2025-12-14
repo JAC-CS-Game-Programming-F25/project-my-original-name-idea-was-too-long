@@ -7,7 +7,8 @@ const ImageName = {
     Backdrop: "backdrop",
     StonePanel: "stonePanel",
     StonePanel2: "stonePanel2",
-    Money: "money"
+    Money: "money",
+    Hand: "hand"
 };
 
 export default ImageName;
