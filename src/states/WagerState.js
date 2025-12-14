@@ -1,15 +1,19 @@
 import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
+import Sprite from "../../lib/Sprite.js";
 import State from "../../lib/State.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, stateStack, timer } from "../globals.js";
+import ImageName from "../enums/ImageName.js";
+import SoundName from "../enums/SoundName.js";
+import { context, images, input, sounds, stateStack, timer } from "../globals.js";
 import UIArrow from "../user-interface/UIArrow.js";
-import UIElement from "../user-interface/UIElement.js";
+import UISprite from "../user-interface/UISprite.js";
 import HelpState from "./HelpState.js";
 
 export default class WagerState extends State {
+    static BACKGROUND_SPRITE_VALUES = { x: 130, y: 0, width: 140, height: 270, scale: { x: 4, y: 4 } }
     static TRANSITION_DURATION = 0.75;
 
     static lastWager = 1;
@@ -43,8 +47,19 @@ export default class WagerState extends State {
         this.isTransitioning = true;
 
         // Define the UI elements.
-        this.background = new UIElement(-(CANVAS_WIDTH / 4), 0, CANVAS_WIDTH / 4, CANVAS_HEIGHT);
-        this.background.alpha = 0.8;
+        this.background = new UISprite(
+            new Sprite(
+                images.get(ImageName.StonePanel),
+                WagerState.BACKGROUND_SPRITE_VALUES.x,
+                WagerState.BACKGROUND_SPRITE_VALUES.y,
+                WagerState.BACKGROUND_SPRITE_VALUES.width,
+                WagerState.BACKGROUND_SPRITE_VALUES.height
+            ),
+            -(WagerState.BACKGROUND_SPRITE_VALUES.width) * WagerState.BACKGROUND_SPRITE_VALUES.scale.x,
+            0,
+            WagerState.BACKGROUND_SPRITE_VALUES.scale
+        );
+
         const arrowPadding = 110;
         this.upArrow = new UIArrow(
             this.background.position.x + this.background.dimensions.x / 2 - UIArrow.SPRITE_MEASUREMENTS_UP.width / 2,
@@ -59,6 +74,7 @@ export default class WagerState extends State {
     }
 
     enter() {
+        // Slide in the UI.
         timer.tween(
             this.background.position,
             { x: 0 },
@@ -66,7 +82,7 @@ export default class WagerState extends State {
             Easing.linear,
             () => { this.isTransitioning = false }
         );
-        // make the transition noise.
+        sounds.play(SoundName.Stone);
     }
 
     update(dt) {
@@ -108,7 +124,7 @@ export default class WagerState extends State {
         }
 
         this.currentWager += amount;
-        // Make a little gold shuffling noise.
+        sounds.play(SoundName.Coin);
     }
 
     acceptWager() {
@@ -119,35 +135,26 @@ export default class WagerState extends State {
     }
 
     render() {
-        this.renderBackground();
+        this.background.render();
         this.renderUI();
-    }
-
-    renderBackground() {
-        context.save();
-        context.globalAlpha = this.background.alpha;
-        context.fillStyle = 'white';
-        context.fillRect(
-            this.background.position.x,
-            this.background.position.y,
-            this.background.dimensions.x,
-            this.background.dimensions.y
-        );
-        context.restore();
     }
 
     renderUI() {
         const textPaddingX = 50;
 
         context.save();
+        context.shadowColor = 'black';
+        context.shadowOffsetX = 2;
+        context.shadowOffsetY = 1;
+        context.shadowBlur = 4;
         context.font = '60px manufacturingConsent';
-        context.fillStyle = 'black';
+        context.textAlign = 'center';
+        context.fillStyle = 'white';
         context.fillText("Make Your Wager",
-            this.background.position.x + textPaddingX,
+            this.background.position.x + this.background.dimensions.x / 2,
             this.background.position.y + 250
         );
         context.font = '30px roboto';
-        context.textAlign = 'center';
         context.fillText("(Press ENTER to submit)",
             this.background.position.x + this.background.dimensions.x / 2,
             this.background.position.y + 300
@@ -173,7 +180,7 @@ export default class WagerState extends State {
             this.downArrow.position.y + this.downArrow.dimensions.y - 17
         );
 
-        context.fillStyle = 'black';
+        context.fillStyle = 'white';
         context.font = '50px manufacturingConsent';
         context.textAlign = 'left';
         context.fillText(`Your Money:`,

@@ -29,6 +29,30 @@
 			"path": "./assets/images/parchment.png",
 			"width": 321,
 			"height": 207
+		},
+		{
+			"name": "backdrop",
+			"path": "./assets/images/backdrop.png",
+			"width": 480,
+			"height": 270
+		},
+		{
+			"name": "stonePanel",
+			"path": "./assets/images/stone-panel.png",
+			"width": 270,
+			"height": 270
+		},
+		{
+			"name": "stonePanel2",
+			"path": "./assets/images/stone-panel_2.png",
+			"width": 270,
+			"height": 112
+		},
+		{
+			"name": "money",
+			"path": "./assets/images/treasure_icons.png",
+			"width": 270,
+			"height": 112
 		}
 	],
 	"fonts": [
@@ -42,6 +66,55 @@
 		}
 	],
 	"sounds": [
-		
+		{
+			"name": "goldSack",
+			"path": "./assets/sounds/gold_sack.wav",
+			"size": 1,
+			"volume": 1
+		},
+		{
+			"name": "coin",
+			"path": "./assets/sounds/hjm-coin_clicker_2.wav",
+			"size": 20,
+			"volume": 0.5
+		}, 
+		{
+			"name": "stone",
+			"path": "./assets/sounds/stone_door.wav",
+			"size": 2,
+			"volume": 1
+		}, 
+		{
+			"name": "dice",
+			"path": "./assets/sounds/dice_05.wav",
+			"size": 1,
+			"volume": 1
+		}, 
+		{
+			"name": "table",
+			"path": "./assets/sounds/chair-stool-wooden-dragged-08.wav",
+			"size": 1,
+			"volume": 0.35
+		}, 
+		{
+			"name": "ambiance",
+			"path": "./assets/sounds/bar-pub-tavern_1.wav",
+			"size": 1,
+			"volume": 0.25,
+			"loop": true
+		}, 
+		{
+			"name": "music",
+			"path": "./assets/sounds/Aetheric-Chieftains-Celebration.mp3",
+			"size": 1,
+			"volume": 0.3,
+			"loop": true
+		}, 
+		{
+			"name": "gameOverMusic",
+			"path": "./assets/sounds/scene-change-music-sad.mp3",
+			"size": 1,
+			"volume": 0.3
+		}
 	]
 }

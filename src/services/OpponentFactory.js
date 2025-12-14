@@ -39,4 +39,13 @@ export default class OpponentFactory {
     get() {
         return this.opponents;
     }
+
+    /**
+     * Resets the money of all opponents for a new game.
+     */
+    reset() {
+        this.opponents.forEach((opponent) => {
+            opponent.money = getRandomPositiveInteger(this.minStartingMoney, this.maxStartingMoney)
+        });
+    }
 }

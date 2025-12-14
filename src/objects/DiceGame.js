@@ -4,7 +4,8 @@ import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, stateStack, timer } from "../globals.js";
+import SoundName from "../enums/SoundName.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, sounds, stateStack, timer } from "../globals.js";
 import GameOverState from "../states/GameOverState.js";
 import PlayState from "../states/PlayState.js";
 import ShowResultState from "../states/ShowResultState.js";
@@ -150,6 +151,8 @@ export default class DiceGame {
      * Roll all the game dice and add up their values into rolledValue.
      */
     rollDice() {
+        sounds.play(SoundName.Dice);
+
         // Roll from the right as the player, from the left as the opponent.
         const positionX = this.isPlayerTurn ? CANVAS_WIDTH / 2 + Board.WIDTH / 4 : CANVAS_WIDTH / 2 - Board.WIDTH / 4;
         const direction = this.isPlayerTurn ? Direction.Left : Direction.Right;
@@ -171,6 +174,8 @@ export default class DiceGame {
      * according to the result of the battle.
      */
     rollBattle() {
+        sounds.play(SoundName.Dice);
+
         // Roll for player.
         this.dice[0].onRoll(Direction.Up, { x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT / 2 + Board.HEIGHT / 4 });
         let playerRoll = this.dice[0].value;
@@ -181,9 +186,10 @@ export default class DiceGame {
 
         // Move the third die offscreen so it doesn't get in the way.
         matter.Body.setPosition(this.dice[2].body, {
-            x: CANVAS_WIDTH - Die.WIDTH * 2,
-            y: 0
+            x: CANVAS_WIDTH + Die.WIDTH * 5,
+            y: -10
         });
+        this.dice[2].body.velocity = { x: 0, y: 0 };
 
         // If there's a tie, fudge it so that the player wins the battle ;)
         if (playerRoll === opponentRoll) {
@@ -270,8 +276,5 @@ export default class DiceGame {
             );
             context.restore();
         }
-
-        // Temp display phase
-        context.fillText(`${this.gamePhase}`, CANVAS_WIDTH - 200, CANVAS_HEIGHT - 200)
     }
 }

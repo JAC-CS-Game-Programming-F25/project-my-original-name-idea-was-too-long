@@ -24,6 +24,7 @@ export default class Opponent extends Character {
         this.greetings = opponentDefinition.greetings;
 
         this.name = opponentDefinition.name;
+        this.fullName = opponentDefinition.fullName ?? opponentDefinition.name;
         this.portrait = new Sprite(
             images.get(ImageName.OpponentPortraits),
             opponentDefinition.portraitDefinition.x,

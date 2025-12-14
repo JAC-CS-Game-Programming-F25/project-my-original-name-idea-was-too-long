@@ -1,7 +1,8 @@
 import Character from "../../entities/Character.js";
 import Opponent from "../../entities/Opponent.js";
 import GamePhase from "../../enums/GamePhase.js";
-import { CANVAS_HEIGHT, context, stateStack } from "../../globals.js";
+import SoundName from "../../enums/SoundName.js";
+import { CANVAS_HEIGHT, context, sounds, stateStack } from "../../globals.js";
 import ShowResultState from "../../states/ShowResultState.js";
 import DiceGame from "../DiceGame.js";
 
@@ -49,9 +50,11 @@ export default class Riffa extends DiceGame {
                     this.gamePhase = GamePhase.Result;
                     if (this.didPlayerWin) {
                         stateStack.push(new ShowResultState(`You Win!\n${this.playerTotal} to ${this.opponentTotal}`));
+                        sounds.play(SoundName.GoldSack);
                         return;
                     } else {
                         stateStack.push(new ShowResultState(`${this.opponent.name} Wins!\n${this.opponentTotal} to ${this.playerTotal}`));
+                        sounds.play(SoundName.GoldSack);
                         return;
                     }
                 }
@@ -100,7 +103,7 @@ export default class Riffa extends DiceGame {
         context.save();
         const textX = 40;
         const textY = CANVAS_HEIGHT - CANVAS_HEIGHT / 3;
-        context.fillStyle = 'black';
+        context.fillStyle = 'white';
         context.textAlign = 'left';
         context.font = '50px manufacturingConsent';
         context.fillText(`Your Score:`, textX, textY);

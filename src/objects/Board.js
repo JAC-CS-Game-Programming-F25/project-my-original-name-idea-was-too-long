@@ -85,7 +85,10 @@ export default class Board extends GameObject {
     }
 
     render() {
+        context.imageSmoothingEnabled = false;
         this.surface.render(this.position.x, this.position.y, this.renderScale);
+        context.imageSmoothingEnabled = true;
+
 
         // Debug, show edge bodies.
         if (DEBUG) {

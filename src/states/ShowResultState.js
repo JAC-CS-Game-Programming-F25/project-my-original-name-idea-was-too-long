@@ -1,13 +1,14 @@
 import Easing from "../../lib/Easing.js";
+import Sprite from "../../lib/Sprite.js";
 import State from "../../lib/State.js";
 import Timer from "../../lib/Timer.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, stateStack } from "../globals.js";
-import UIElement from "../user-interface/UIElement.js";
+import ImageName from "../enums/ImageName.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, images, stateStack } from "../globals.js";
+import UISprite from "../user-interface/UISprite.js";
 import UITextBox from "../user-interface/UITextBox.js";
 
 export default class ShowResultState extends State {
-    static PANEL_HEIGHT = 200;
-    static PANEL_WIDTH = 600;
+    static PANEL_SPRITE_VALUES = { x: 0, y: 0, width: 270, height: 112, scale: { x: 2, y: 2 } }
     static TEXT_PADDING = 20;
     static FONT_SIZE = 60;
 
@@ -20,34 +21,40 @@ export default class ShowResultState extends State {
      * sliding back off, with the State popping itself back off of the State Stack.
      * 
      * @param {string} text The result to display on screen.
-     * @param {object} options Options for determining the size of the UI panel, the font size, and the length of time that the animation holds.
+     * @param {object} options Options for determining the scale of the UI panel, the font size, and the length of time that the animation holds.
      */
     constructor(text, options = {}) {
         super();
 
-        const backgroundWidth = options.backgroundWidth ?? ShowResultState.PANEL_WIDTH;
-        const backgroundHeight = options.backgroundHeight ?? ShowResultState.PANEL_HEIGHT;
+        const scale = options.scale ?? ShowResultState.PANEL_SPRITE_VALUES.scale;
         const fontSize = options.fontSize ?? ShowResultState.FONT_SIZE;
         this.holdDuration = options.holdDuration ?? ShowResultState.HOLD_DURATION;
 
-        this.background = new UIElement(
+        this.background = new UISprite(
+            new Sprite(
+                images.get(ImageName.StonePanel2),
+                ShowResultState.PANEL_SPRITE_VALUES.x,
+                ShowResultState.PANEL_SPRITE_VALUES.y,
+                ShowResultState.PANEL_SPRITE_VALUES.width,
+                ShowResultState.PANEL_SPRITE_VALUES.height,
+            ),
             CANVAS_WIDTH,
-            CANVAS_HEIGHT / 2 - backgroundHeight / 2,
-            backgroundWidth,
-            backgroundHeight
+            CANVAS_HEIGHT / 2 - ShowResultState.PANEL_SPRITE_VALUES.height * scale.y / 2,
+            scale
         );
 
         this.textBox = new UITextBox(
             text,
             this.background.position.x + ShowResultState.TEXT_PADDING,
-            this.background.position.y + ShowResultState.TEXT_PADDING,
+            this.background.position.y + ShowResultState.TEXT_PADDING * 2,
             this.background.dimensions.x - ShowResultState.TEXT_PADDING * 2,
             this.background.dimensions.y - ShowResultState.TEXT_PADDING * 2,
             {
                 fontFamily: 'serif',
-                fontColour: 'black',
+                fontColour: 'white',
                 fontSize: fontSize,
-                textAlignment: 'center'
+                textAlignment: 'center',
+                textShadow: true
             }
         );
 
@@ -104,15 +111,7 @@ export default class ShowResultState extends State {
     }
 
     render() {
-        context.save();
-        context.fillStyle = 'white';
-        context.fillRect(
-            this.background.position.x,
-            this.background.position.y,
-            this.background.dimensions.x,
-            this.background.dimensions.y
-        );
-        context.restore();
+        this.background.render();
 
         this.textBox.render();
     }

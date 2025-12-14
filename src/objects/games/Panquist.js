@@ -2,9 +2,10 @@ import Character from "../../entities/Character.js";
 import Opponent from "../../entities/Opponent.js";
 import GamePhase from "../../enums/GamePhase.js";
 import PanquistStakesByRoll from "./PanquistStakesByRoll.js";
-import { CANVAS_HEIGHT, context, stateStack } from "../../globals.js";
+import { CANVAS_HEIGHT, context, sounds, stateStack } from "../../globals.js";
 import DiceGame from "../DiceGame.js";
 import ShowResultState from "../../states/ShowResultState.js";
+import SoundName from "../../enums/SoundName.js";
 
 export default class Panquist extends DiceGame {
     static VALID_MARKS = [7, 8, 9, 10, 11, 12, 13, 14];
@@ -56,6 +57,7 @@ export default class Panquist extends DiceGame {
                     holdDuration: Panquist.RESULT_STATE_HOLD_DURATION
                 }
             ));
+            sounds.play(SoundName.GoldSack);
             return;
         }
         if (this.rolledValue === this.opponentMark) {
@@ -69,6 +71,7 @@ export default class Panquist extends DiceGame {
                     holdDuration: Panquist.RESULT_STATE_HOLD_DURATION
                 }
             ));
+            sounds.play(SoundName.GoldSack);
             return;
         }
 
@@ -130,7 +133,7 @@ export default class Panquist extends DiceGame {
         context.save();
         const textX = 40;
         const textY = CANVAS_HEIGHT - CANVAS_HEIGHT / 3;
-        context.fillStyle = 'black';
+        context.fillStyle = 'white';
         context.textAlign = 'left';
         context.font = '50px manufacturingConsent';
         context.fillText(`Your Mark:`, textX, textY);
