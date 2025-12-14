@@ -80,19 +80,5 @@ export default class Board {
         context.imageSmoothingEnabled = false;
         this.surface.render(this.position.x, this.position.y, this.renderScale);
         context.imageSmoothingEnabled = true;
-
-
-        // Debug, show edge bodies.
-        if (DEBUG) {
-            this.edges.forEach((edge) => {
-                context.save();
-                context.strokeStyle = "red"
-                context.beginPath();
-                context.rect(edge.bounds.min.x, edge.bounds.min.y, edge.bounds.max.x - edge.bounds.min.x, edge.bounds.max.y - edge.bounds.min.y)
-                context.stroke();
-                context.closePath();
-                context.restore();
-            });
-        }
     }
 }

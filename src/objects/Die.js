@@ -10,8 +10,6 @@ import ImageName from "../enums/ImageName.js";
 import Direction from "../enums/Direction.js";
 import Vector from "../../lib/Vector.js";
 
-const { Composite } = matter;
-
 export default class Die extends GameObject {
     static MIN_VALUE = 1;
     static MAX_VALUE = 6;

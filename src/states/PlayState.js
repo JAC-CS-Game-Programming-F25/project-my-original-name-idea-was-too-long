@@ -2,7 +2,7 @@ import State from "../../lib/State.js";
 import Character from "../entities/Character.js";
 import Opponent from "../entities/Opponent.js";
 import DiceGameFactory from "../services/DiceGameFactory.js";
-import { CANVAS_WIDTH, context, engine, images, input, matter, sounds, stateStack, timer, world } from "../globals.js";
+import { CANVAS_WIDTH, context, DEBUG, engine, images, input, matter, sounds, stateStack, timer, world } from "../globals.js";
 import Board from "../objects/Board.js";
 import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
@@ -29,6 +29,11 @@ export default class PlayState extends State {
 	 */
 	constructor(player, opponent) {
 		super();
+
+		// Remove any Matter bodies lingering due to a previous atypical game exit.
+		Composite.allBodies(world).forEach((body) => {
+			Composite.remove(world, body);
+		});
 
 		this.player = player;
 		this.opponent = opponent;
@@ -134,5 +139,18 @@ export default class PlayState extends State {
 			this.board.position.y + this.board.dimensions.y / 2
 		);
 		context.restore();
+
+		// Debugging mode, render a rectangle around each body in the world.
+		if (DEBUG) {
+			Composite.allBodies(world).forEach((body) => {
+				context.save();
+				context.strokeStyle = "red"
+				context.beginPath();
+				context.rect(body.bounds.min.x, body.bounds.min.y, body.bounds.max.x - body.bounds.min.x, body.bounds.max.y - body.bounds.min.y);
+				context.stroke();
+				context.closePath();
+				context.restore();
+			});
+		}
 	}
 }
