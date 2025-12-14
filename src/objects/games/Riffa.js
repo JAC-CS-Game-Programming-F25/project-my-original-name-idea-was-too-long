@@ -96,6 +96,14 @@ export default class Riffa extends DiceGame {
         this.dice.forEach((die) => { die.isHeld = false });
     }
 
+    loadData(gameData) {
+        super.loadData(gameData);
+
+        this.playerTotal = gameData.playerTotal;
+        this.opponentTotal = gameData.playerTotal;
+        this.finalRoll = gameData.finalRoll;
+    }
+
     render() {
         super.render();
 

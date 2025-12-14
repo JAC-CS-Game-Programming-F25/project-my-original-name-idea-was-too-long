@@ -84,11 +84,9 @@ export default class TitleScreenState extends State {
 					this,
 					{ menuAlpha: 1 },
 					this.fadeInDuration,
-					Easing.easeOutQuad,
-					() => {
-						this.isTransitioning = false;
-					}
+					Easing.easeOutQuad
 				);
+				this.isTransitioning = false;
 			}
 		);
 	}
@@ -102,10 +100,12 @@ export default class TitleScreenState extends State {
 		if (input.isKeyPressed(Input.KEYS.ENTER)) {
 			switch (this.selectedOption) {
 				case 0:
-					this.fadeToOpponentSelection();
+					// Start a new game.
+					this.fadeToOpponentSelection(true);
 					break;
 				case 1:
-					// load old save
+					// Load existing game.
+					this.fadeToOpponentSelection(false);
 					break;
 				default:
 					break;
@@ -129,8 +129,9 @@ export default class TitleScreenState extends State {
 
 	/**
 	 * Fade out the UI before transitioning to the next state.
+	 * @param {boolean} isNewGame If true, start a new game from scratch. If false, load data from local storage.
 	 */
-	fadeToOpponentSelection() {
+	fadeToOpponentSelection(isNewGame) {
 		this.isTransitioning = true;
 		timer.tween(
 			this,
@@ -138,7 +139,7 @@ export default class TitleScreenState extends State {
 			this.fadeOutDuration,
 			Easing.linear,
 			() => {
-				stateStack.push(new OpponentSelectionState());
+				stateStack.push(new OpponentSelectionState(), isNewGame);
 			}
 		);
 	}

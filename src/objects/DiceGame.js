@@ -5,13 +5,15 @@ import Opponent from "../entities/Opponent.js";
 import Direction from "../enums/Direction.js";
 import GamePhase from "../enums/GamePhase.js";
 import SoundName from "../enums/SoundName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, sounds, stateStack, timer } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, matter, sounds, stateStack, timer, world } from "../globals.js";
 import GameOverState from "../states/GameOverState.js";
 import PlayState from "../states/PlayState.js";
 import ShowResultState from "../states/ShowResultState.js";
 import WagerState from "../states/WagerState.js";
 import Board from "./Board.js";
 import Die from "./Die.js";
+
+const { Composite } = matter;
 
 export default class DiceGame {
     // Values for setting the Show Result State after someone wins the match.
@@ -238,6 +240,24 @@ export default class DiceGame {
             }
             return value;
         }));
+    }
+
+    loadData(gameData) {
+        this.gamePhase = gameData.gamePhase;
+        this.rolledValue = gameData.rolledValue;
+        this.wagerAmount = gameData.wagerAmount;
+        this.isPlayerTurn = gameData.isPlayerTurn;
+        this.isFirstRoll = gameData.isFirstRoll;
+        this.enableDiceTotalDisplay = gameData.enableDiceTotalDisplay;
+
+        // Update the properties of the dice.
+        this.dice.forEach((die, index) => {
+            die.value = gameData.dice[index].value;
+            matter.Body.setPosition(
+                die.body,
+                gameData.dice[index].position
+            );
+        });
     }
 
     render() {

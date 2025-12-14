@@ -64,10 +64,10 @@ export default class PlayState extends State {
 
 	exit() {
 		// Remove all Matter bodies from the world before exiting this state.
-		Composite.allBodies(world).forEach((body) =>
-			Composite.remove(world, body)
-		);
-		localStorage.setItem("game", "");
+		Composite.allBodies(world).forEach((body) => {
+			Composite.remove(world, body);
+		});
+		localStorage.removeItem("game");
 	}
 
 	update(dt) {
