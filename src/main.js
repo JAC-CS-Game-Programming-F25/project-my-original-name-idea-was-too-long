@@ -18,6 +18,9 @@
  * hjm-coin_clicker_2.wav by Varkalandar https://opengameart.org/content/coin-sounds-0
  * dice_05.wav by dermotte https://freesound.org/people/dermotte/sounds/220745/
  * chair-stool-wooden-dragged-08.wav by BWOBoyle https://freesound.org/people/DWOBoyle/sounds/146998/
+ * bar-pub-tavern_1.wav by o_ciz https://freesound.org/people/o_ciz/sounds/475505/
+ * Chieftains Celebration by Aetheric https://freetouse.com/music/aetheric/chieftains-celebration
+ * scene-change-music-sad.mp3 by dominictreis https://freesound.org/people/dominictreis/sounds/362281/
  */
 
 import Game from '../lib/Game.js';

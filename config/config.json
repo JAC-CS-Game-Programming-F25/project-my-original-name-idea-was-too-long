@@ -82,7 +82,7 @@
 			"name": "stone",
 			"path": "./assets/sounds/stone_door.wav",
 			"size": 2,
-			"volume": 0.75
+			"volume": 1
 		}, 
 		{
 			"name": "dice",
@@ -95,6 +95,26 @@
 			"path": "./assets/sounds/chair-stool-wooden-dragged-08.wav",
 			"size": 1,
 			"volume": 0.35
+		}, 
+		{
+			"name": "ambiance",
+			"path": "./assets/sounds/bar-pub-tavern_1.wav",
+			"size": 1,
+			"volume": 0.25,
+			"loop": true
+		}, 
+		{
+			"name": "music",
+			"path": "./assets/sounds/Aetheric-Chieftains-Celebration.mp3",
+			"size": 1,
+			"volume": 0.3,
+			"loop": true
+		}, 
+		{
+			"name": "gameOverMusic",
+			"path": "./assets/sounds/scene-change-music-sad.mp3",
+			"size": 1,
+			"volume": 0.3
 		}
 	]
 }

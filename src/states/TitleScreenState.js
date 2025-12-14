@@ -1,6 +1,7 @@
 import State from "../../lib/State.js";
 import ImageName from "../enums/ImageName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, stateStack } from "../globals.js";
+import SoundName from "../enums/SoundName.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, sounds, stateStack } from "../globals.js";
 import OpponentSelectionState from "./OpponentSelectionState.js";
 
 export default class TitleScreenState extends State {
@@ -11,7 +12,11 @@ export default class TitleScreenState extends State {
 	}
 
 	enter() {
-		stateStack.push(new OpponentSelectionState()) // for now go straight to the Opponent selection.
+		sounds.stopAll();
+		sounds.play(SoundName.Ambiance);
+		sounds.play(SoundName.Music);
+
+		stateStack.push(new OpponentSelectionState()); // for now go straight to the Opponent selection.
 	}
 
 	// ToDo, make the actual everything here.

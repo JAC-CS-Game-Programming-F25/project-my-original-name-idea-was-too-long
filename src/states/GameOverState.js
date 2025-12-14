@@ -1,7 +1,8 @@
 import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
 import State from "../../lib/State.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, stateStack, timer } from "../globals.js";
+import SoundName from "../enums/SoundName.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, input, sounds, stateStack, timer } from "../globals.js";
 import TitleScreenState from "./TitleScreenState.js";
 
 export default class GameOverState extends State {
@@ -23,6 +24,9 @@ export default class GameOverState extends State {
 	}
 
 	enter() {
+		sounds.play(SoundName.GameOverMusic);
+		sounds.stop(SoundName.Music);
+
 		// Dim the screen.
 		timer.tween(
 			this,
