@@ -2,14 +2,13 @@ import Sprite from "../../lib/Sprite.js";
 import Vector from "../../lib/Vector.js";
 import ImageName from "../enums/ImageName.js";
 import { CANVAS_HEIGHT, CANVAS_WIDTH, context, DEBUG, images, matter, world } from "../globals.js";
-import GameObject from "./GameObject.js";
+import BoardEdge from "./BoardEdge.js";
 
 const { Composite } = matter;
 
-export default class Board extends GameObject {
+export default class Board {
     static WIDTH = 1000;
     static HEIGHT = 1000;
-    static EDGE_THICKNESS = 80;
 
     static SPRITE_DIMENSIONS = { width: 300, height: 300 };
 
@@ -23,8 +22,6 @@ export default class Board extends GameObject {
      * @param {*} height 
      */
     constructor(x, y, width = Board.WIDTH, height = Board.HEIGHT) {
-        super();
-
         this.position = new Vector(x, y);
         this.dimensions = new Vector(width, height);
         this.renderScale = {
@@ -45,43 +42,38 @@ export default class Board extends GameObject {
             Board.SPRITE_DIMENSIONS.height
         );
 
-        // Set up the edges of the board as static matter.js bodies.
+        // Set up the edges of the board.
         // These are set to the board's final post-tween position.
         this.edges = [
             // Left
-            matter.Bodies.rectangle(
-                this.finalX + Board.EDGE_THICKNESS / 2,
-                this.position.y + this.dimensions.y / 2,
-                Board.EDGE_THICKNESS,
-                this.dimensions.y,
-                { isStatic: true }
+            new BoardEdge(
+                this.finalX,
+                this.position.y,
+                BoardEdge.THICKNESS,
+                this.dimensions.y
             ),
             // Top
-            matter.Bodies.rectangle(
-                this.finalX + this.dimensions.x / 2,
-                this.position.y + Board.EDGE_THICKNESS / 2,
+            new BoardEdge(
+                this.finalX,
+                this.position.y,
                 this.dimensions.x,
-                Board.EDGE_THICKNESS,
-                { isStatic: true }
+                BoardEdge.THICKNESS
             ),
             // Right
-            matter.Bodies.rectangle(
-                this.finalX + this.dimensions.x - Board.EDGE_THICKNESS / 2,
-                this.position.y + this.dimensions.y / 2,
-                Board.EDGE_THICKNESS,
-                this.dimensions.y,
-                { isStatic: true }
+            new BoardEdge(
+                this.finalX + this.dimensions.x - BoardEdge.THICKNESS,
+                this.position.y,
+                BoardEdge.THICKNESS,
+                this.dimensions.y
             ),
             // Bottom
-            matter.Bodies.rectangle(
-                this.finalX + this.dimensions.x / 2,
-                this.position.y + this.dimensions.y - Board.EDGE_THICKNESS / 2,
+            new BoardEdge(
+                this.finalX,
+                this.position.y + this.dimensions.y - BoardEdge.THICKNESS,
                 this.dimensions.x,
-                Board.EDGE_THICKNESS,
-                { isStatic: true }
+                BoardEdge.THICKNESS
             )
         ];
-        this.edges.forEach((edge) => { Composite.add(world, edge) });
     }
 
     render() {

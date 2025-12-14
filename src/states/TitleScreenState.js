@@ -2,9 +2,10 @@ import Easing from "../../lib/Easing.js";
 import Input from "../../lib/Input.js";
 import Sprite from "../../lib/Sprite.js";
 import State from "../../lib/State.js";
+import Timer from "../../lib/Timer.js";
 import ImageName from "../enums/ImageName.js";
 import SoundName from "../enums/SoundName.js";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, input, sounds, stateStack, timer } from "../globals.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, context, images, input, sounds, stateStack } from "../globals.js";
 import UISprite from "../user-interface/UISprite.js";
 import UITextBox from "../user-interface/UITextBox.js";
 import OpponentSelectionState from "./OpponentSelectionState.js";
@@ -65,6 +66,8 @@ export default class TitleScreenState extends State {
 		);
 
 		this.isTransitioning = true;
+
+		this.timer = new Timer();
 	}
 
 	enter() {
@@ -73,14 +76,14 @@ export default class TitleScreenState extends State {
 		sounds.play(SoundName.Music);
 
 		// Start title fade in.
-		timer.tween(
+		this.timer.tween(
 			this,
 			{ titleAlpha: 1 },
 			this.fadeInDuration,
 			Easing.linear,
 			() => {
 				// Then fade in menu selection options.
-				timer.tween(
+				this.timer.tween(
 					this,
 					{ menuAlpha: 1 },
 					this.fadeInDuration,
@@ -92,6 +95,8 @@ export default class TitleScreenState extends State {
 	}
 
 	update(dt) {
+		this.timer.update(dt);
+
 		if (this.isTransitioning) {
 			return;
 		}
@@ -133,7 +138,9 @@ export default class TitleScreenState extends State {
 	 */
 	fadeToOpponentSelection(isNewGame) {
 		this.isTransitioning = true;
-		timer.tween(
+		this.timer.clear();
+
+		this.timer.tween(
 			this,
 			{ titleAlpha: 0, menuAlpha: 0 },
 			this.fadeOutDuration,

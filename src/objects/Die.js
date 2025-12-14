@@ -27,15 +27,13 @@ export default class Die extends GameObject {
      * A singular 6 sided die which can be rolled as part of a dice game.
      */
     constructor() {
-        super();
+        super(matter.Bodies.rectangle(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, Die.WIDTH, Die.HEIGHT));
+
         this.value = 1;
 
         // Whether the die is being prevented from rolling.
         this.isHeld = false;
 
-        // Create the body in the matter.js physics world.
-        this.body = matter.Bodies.rectangle(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, Die.WIDTH, Die.HEIGHT);
-        Composite.add(world, this.body);
         // The offset for rendering the sprite in relation to the position value of the matter body.
         this.renderOffset = { x: Die.WIDTH / 2, y: Die.HEIGHT / 2 };
 
@@ -46,25 +44,12 @@ export default class Die extends GameObject {
         this.stateMachine.change(DieStateName.Idle);
 
         // Set up dice sprites.
-        const spriteSheet = images.get(ImageName.Dice);
-        this.sprites = [
-            // Idle sprites
-            new Sprite(spriteSheet, 0, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 1, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 2, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 3, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 4, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 5, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            // Rolling animation sprites
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 6, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 7, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 8, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 9, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 10, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 11, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 12, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-            new Sprite(spriteSheet, Die.SPRITE_WIDTH * 13, 0, Die.SPRITE_WIDTH, Die.SPRITE_HEIGHT),
-        ];
+        this.sprites = Sprite.generateSpritesFromSpriteSheet(
+            images.get(ImageName.Dice),
+            Die.SPRITE_WIDTH,
+            Die.SPRITE_HEIGHT
+        );
+
         this.currentAnimation = this.stateMachine.currentState.animations[this.value - 1];
         this.currentFrame = 0;
     }
