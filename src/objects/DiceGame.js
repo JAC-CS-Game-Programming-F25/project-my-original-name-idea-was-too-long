@@ -65,6 +65,7 @@ export default class DiceGame {
         switch (this.gamePhase) {
 
             case GamePhase.Wager:
+                this.saveData();
                 // Bring up wager state to get player's wager, and then proceed to the battle phase.
                 stateStack.push(new WagerState(this.player, this.opponent, (wager) => {
                     this.wagerAmount = wager;
@@ -79,6 +80,7 @@ export default class DiceGame {
                 break;
 
             case GamePhase.BattleRolling:
+                this.saveData();
                 // Bring up the result UI showing who won the battle.
                 stateStack.push(new ShowResultState(`${this.isPlayerTurn ? "You Go First" : "Opponent Goes First"}`));
                 this.gamePhase = GamePhase.ToRoll;
@@ -112,6 +114,7 @@ export default class DiceGame {
 
             case GamePhase.Rolling:
                 this.isFirstRoll = false;
+                this.saveData();
                 // What to do with the roll will depend on the specific game being played.
                 this.checkRoll();
                 break;
@@ -157,7 +160,7 @@ export default class DiceGame {
         const positionX = this.isPlayerTurn ? CANVAS_WIDTH / 2 + Board.WIDTH / 4 : CANVAS_WIDTH / 2 - Board.WIDTH / 4;
         const direction = this.isPlayerTurn ? Direction.Left : Direction.Right;
 
-        this.rolledValue = 0; // might replace this by a returned value?s
+        this.rolledValue = 0;
         this.dice.forEach((die) => {
             const positionY = getRandomPositiveNumber(
                 CANVAS_HEIGHT / 2 - Board.HEIGHT / 8,
@@ -223,6 +226,18 @@ export default class DiceGame {
             this.gamePhase = GamePhase.Wager;
             this.reset();
         }
+    }
+
+    saveData() {
+        localStorage.setItem("game", JSON.stringify(this, (key, value) => {
+            // You can't stringify matter bodies due to circular reference, so the dice need to only save important, raw properties.
+            if (key === "dice") {
+                return value.map((die) => {
+                    return { value: die.value, position: die.body.position }
+                });
+            }
+            return value;
+        }));
     }
 
     render() {

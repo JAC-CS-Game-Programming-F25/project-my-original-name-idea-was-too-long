@@ -67,6 +67,7 @@ export default class PlayState extends State {
 		Composite.allBodies(world).forEach((body) =>
 			Composite.remove(world, body)
 		);
+		localStorage.setItem("game", "");
 	}
 
 	update(dt) {

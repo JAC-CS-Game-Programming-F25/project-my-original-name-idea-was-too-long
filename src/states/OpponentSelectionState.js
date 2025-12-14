@@ -91,12 +91,16 @@ export default class OpponentSelectionState extends State {
         this.timer = new Timer();
     }
 
-    update(dt) {
-        // Check for victory when the Opponent state is fading in (i.e. after coming back from a game).
-        if (this.isFading) {
-            this.checkVictory();
-        }
+    enter() {
+        this.saveData();
+    }
 
+    reEnter() {
+        this.checkVictory();
+        this.saveData();
+    }
+
+    update(dt) {
         if (!this.isTransitioning && !this.isFading) {
             if (input.isKeyPressed(Input.KEYS.A) || input.isKeyPressed(Input.KEYS.ARROW_LEFT)) {
                 this.switchOpponent(-1);
@@ -158,6 +162,7 @@ export default class OpponentSelectionState extends State {
             this.alpha.fadeDuration,
             Easing.linear,
             () => {
+                this.saveData();
                 stateStack.push(new PlayState(
                     this.player,
                     this.opponents[this.selectedOpponent]
@@ -181,6 +186,12 @@ export default class OpponentSelectionState extends State {
         }
         // If all of the opponents are broke, the player wins.
         stateStack.push(new VictoryState());
+    }
+
+    saveData() {
+        localStorage.setItem("opponents", JSON.stringify(this.opponents));
+        localStorage.setItem("selectedOpponent", JSON.stringify(this.selectedOpponent));
+        localStorage.setItem("player", JSON.stringify(this.player));
     }
 
     //#region Render methods
