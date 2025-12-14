@@ -186,9 +186,10 @@ export default class DiceGame {
 
         // Move the third die offscreen so it doesn't get in the way.
         matter.Body.setPosition(this.dice[2].body, {
-            x: CANVAS_WIDTH - Die.WIDTH * 2,
-            y: 0
+            x: CANVAS_WIDTH + Die.WIDTH * 5,
+            y: -10
         });
+        this.dice[2].body.velocity = { x: 0, y: 0 };
 
         // If there's a tie, fudge it so that the player wins the battle ;)
         if (playerRoll === opponentRoll) {

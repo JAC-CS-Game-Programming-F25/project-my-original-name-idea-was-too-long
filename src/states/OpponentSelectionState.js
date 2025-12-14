@@ -28,6 +28,7 @@ export default class OpponentSelectionState extends State {
         super();
 
         this.player = new Character();
+        opponentFactory.reset();
         this.opponents = opponentFactory.get();
 
         // Set the index of the opponent who will appear on the screen.
@@ -200,7 +201,7 @@ export default class OpponentSelectionState extends State {
         context.textAlign = 'center';
         context.font = '60px manufacturingConsent';
         context.fillStyle = 'black';
-        context.fillText(currentOpponent.name, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 60);
+        context.fillText(currentOpponent.fullName, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 60);
         context.font = '40px manufacturingConsent';
         if (!currentOpponent.isBroke()) {
             context.fillText(`Game: ${currentOpponent.game}`, CANVAS_WIDTH / 2 + this.transitionOffset, CANVAS_HEIGHT / 2 + 110);
@@ -224,7 +225,7 @@ export default class OpponentSelectionState extends State {
             );
             context.font = '60px manufacturingConsent';
             context.fillText(
-                previousOpponent?.name,
+                previousOpponent?.fullName,
                 CANVAS_WIDTH / 2 + this.transitionOffset - distanceFromCurrentOpponent,
                 CANVAS_HEIGHT / 2 + 60
             );
