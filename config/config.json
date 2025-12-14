@@ -53,6 +53,12 @@
 			"path": "./assets/images/treasure_icons.png",
 			"width": 270,
 			"height": 112
+		},
+		{
+			"name": "hand",
+			"path": "./assets/images/Pointer-hands-colour.001.png",
+			"width": 576,
+			"height": 512
 		}
 	],
 	"fonts": [
