@@ -166,7 +166,7 @@ export default class TitleScreenState extends State {
 		context.shadowBlur = 5;
 		context.font = '160px manufacturingConsent';
 		context.textAlign = 'center'
-		context.fillText("Dedos de", CANVAS_WIDTH / 2 - 200, CANVAS_HEIGHT / 2 - 200);
+		context.fillText("Dados de", CANVAS_WIDTH / 2 - 200, CANVAS_HEIGHT / 2 - 200);
 		context.font = '300px manufacturingConsent';
 		context.fillText("Toledo", CANVAS_WIDTH / 2 + 30, CANVAS_HEIGHT / 2 + 60);
 
